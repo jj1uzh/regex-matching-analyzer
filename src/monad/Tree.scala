@@ -25,6 +25,39 @@ object Tree {
     }
     def fail[A] = Fail
     def concat[A](m1: Tree[A], m2: Tree[A]) = Or(m1,m2)
+    def eval[A](m: Tree[A])(v: A => Boolean): Boolean = {
+      m match {
+        case Leaf(a) => v(a)
+        case Success => true
+        case Fail => false
+        case Or(l,r) => eval(l)(v) || eval(r)(v)
+        case Lft(_) => throw new Exception("eval operetor is undefined for Lft.")
+      }
+    }
+    def success[A] = Success
+    def union[A](m1: Tree[A], m2: Tree[A]) = Or(m1,m2)
+
+  }
+
+  type SetTree[A] = Set[Tree[A]]
+  implicit object SetTreeMonad extends Monad[SetTree]{
+    def unit[A](a: A) = Set(Leaf(a))
+    def bind[A,B](a: SetTree[A], f:A => SetTree[B]): SetTree[B] = {
+      def bind0(t: Tree[A], f:A => SetTree[B]): SetTree[B] = {
+        t match{
+          case Leaf(a) => f(a)
+          case Success => Set(Success)
+          case Fail => Set(Fail)
+          case Lft(l) => bind0(l,f).flatMap(t => Set(Lft(t)))
+          case Or(t1,t2) => SetTreeMonad.concat(bind0(t1,f),bind0(t2,f))
+        }
+      }
+      a.flatMap(t => bind0(t,f))
+    }
+    def success[A] = Set(Success)
+    def fail[A] = Set(Fail)
+    def concat[A](m1: SetTree[A], m2: SetTree[A]) = m1.flatMap(tree1 => m2.flatMap(tree2 => Set(Or(tree1,tree2))))
+    def union[A](m1: SetTree[A], m2: SetTree[A]) = m1 union m2
   }
 
   def flat[Q](m: Tree[Q]): Seq[Q] = {
@@ -49,6 +82,30 @@ object Tree {
   def cut[Q](t: Tree[Q], qs: Set[Q] = Set[Q]()): Tree[Q] = {
     t match {
       case Or(l,r) => if (hasSuccess(l,qs)) Lft(cut(l,qs)) else Or(l,cut(r,qs))
+      case _ => t
+    }
+  }
+
+  def leavesOfTree[A](m: Tree[A]): Seq[A] = {
+    m match {
+      case Leaf(a) => Seq(a)
+      case Success | Fail => Seq.empty
+      case Or(l,r) => leavesOfTree(l) ++ leavesOfTree(r)
+      case Lft(l) => leavesOfTree(l)
+      case _ => Seq.empty
+    }
+  }
+
+  def isNonTrivial[A](m: Tree[A]): Boolean = {
+    m match {
+      case Leaf(a) => false
+      case _ => true
+    }
+  }
+
+  def pruneNoAssert[Q](t: Tree[Q], qs: Set[Q] = Set[Q]()): Tree[Q] = {
+    t match {
+      case Or(l,r) => if (TreeMonad.eval(l)(qs)) Lft(pruneNoAssert(l,qs)) else Or(l,pruneNoAssert(r,qs))
       case _ => t
     }
   }

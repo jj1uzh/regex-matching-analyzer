@@ -4,8 +4,8 @@ import matching.Witness
 import matching.tool.{Analysis, Debug}
 
 class DT0L[A,Q](
-  states: Set[Q],
-  morphs: Map[A, Map[Q,Seq[Q]]]
+  val states: Set[Q],
+  val morphs: Map[A, Map[Q,Seq[Q]]]
 ) {
   type Pump = (Q,Seq[A],Q)
 
@@ -47,7 +47,6 @@ class DT0L[A,Q](
         ("number of edges", graph.labeledEdges.size),
         ("number of strong components", scs.size)
       )
-
       val alpha = morphs.keys.toSeq
       val reachableMapScGraph = scGraph.reachableMapDAG()
       val reachableMapScGraphRev = scGraph.reverse().reachableMapDAG()
@@ -217,8 +216,8 @@ class DT0L[A,Q](
 }
 
 class PairDT0L[A,R,P](
-  states: Set[(R,P)],
-  morphs: Map[A, Map[(R,P),Seq[(R,P)]]]
+  val states: Set[(R,P)],
+  val morphs: Map[A, Map[(R,P),Seq[(R,P)]]]
 ) {
   type Q = (R,P)
   type Pump = (Q,Seq[A],Q)
@@ -438,7 +437,7 @@ class IndexedDT0L[A,Q,P](
       val morphs = indexedMorphs.flatMap{ case ((p1,p2),morphs) =>
         morphs.map{ case (a,morph) =>
           (a,p2) -> morph.map{ case (b,bs) =>
-             (b,p1) -> bs.map((_,p2))
+            (b,p1) -> bs.map((_,p2))
           }
         }
       }

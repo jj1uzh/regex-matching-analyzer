@@ -69,7 +69,7 @@ class RegExpDeriver[M[_,_]](options: PCREOptions = new PCREOptions())(implicit m
       case AltExp(r1,r2) =>
         derive(r1,a) ++ derive(r2,a)
       case StarExp(r1,greedy) =>
-        val rd: M[Option[RegExp[A]], Option[RegExp[A]]] = derive(r1,a) `>>=r` {
+        val rd: M[Option[RegExp[A]], Option[RegExp[A]]] = derive(r1,a) >>= {
           case Some(r2) => m(Some(optConcatExp(r2,r)))
           case None => m(None)
         }

@@ -14,7 +14,7 @@ import java.text.DateFormat
 object Main {
   class Settings() {
     var style: RegExpStyle = Raw
-    var method: Option[BacktrackMethod] = Some(Lookahead)
+    var method: Option[BacktrackMethod] = Some(BDM)
     var timeout: Option[Int] = Some(10)
 
     override def toString(): String = {
@@ -51,6 +51,13 @@ object Main {
             Debug.debugModeGlobal = true
             parseOptions(options, setting)
           case Nil => setting
+          case "--method" :: method :: options =>
+            setting.method = method match {
+              case "BDM" => Some(BDM)
+              case "KM" => Some(KM)
+              case _ => throw new Exception(s"invalid method option: ${method}")
+            }
+            parseOptions(options, setting)
           case _ => throw new Exception("invalid option")
         }
       }

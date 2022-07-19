@@ -4,19 +4,30 @@ import collection.mutable.Stack
 import matching.Witness
 import matching.monad._
 import matching.monad.AMonad._
-import matching.monad.ATree._
+//import matching.monad.ATree._
 import matching.monad.StateT._
 import matching.transition._
 import matching.tool.{Analysis, Debug, IO}
 
+import matching.monad.Monad._
+import Tree._
+
 trait RegExp[A] {
   override def toString(): String = RegExp.toString(this)
+  /*
   def derive[M[_,_]](a: A)(implicit deriver: RegExpDeriver[M])
     : M[Option[RegExp[A]], Option[RegExp[A]]] = deriver.derive(this,Some(a))
   def derive[M[_,_]](a: Option[A])(implicit deriver: RegExpDeriver[M])
     : M[Option[RegExp[A]], Option[RegExp[A]]] = deriver.derive(this,a)
   def deriveEOL[M[_,_]]()(implicit deriver: RegExpDeriver[M])
     : M[Unit, Unit] = deriver.deriveEOL(this)
+  */
+  def derive[M[_]](a: A)(implicit deriver: RegExpSetTreeDeriver)
+    = deriver.derive(this,Some(a))
+  def derive[M[_]](a: Option[A])(implicit deriver: RegExpSetTreeDeriver)
+    = deriver.derive(this,a)
+  def deriveEOL[M[_]]()(implicit deriver: RegExpSetTreeDeriver)
+    = deriver.deriveEOL(this)
 }
 
 case class ElemExp[A](a: A) extends RegExp[A]
@@ -90,12 +101,16 @@ case class BoundaryExp() extends RegExp[Char]
 
 case class FailEpsExp[A]() extends RegExp[A]
 
+case class EnumExp[A](r: RegExp[A]) extends RegExp[A]
+case class UnionExp[A](r1: RegExp[A],r2: RegExp[A]) extends RegExp[A]
+
 object RegExp {
   case class InvalidRegExpException(message: String) extends Exception(message: String)
 
   class PCREOptions(s: String = "") {
     var ignoreCase = false
     var dotAll = false
+
     var ungreedy = false
 
     s.foreach{
@@ -173,6 +188,9 @@ object RegExp {
       case LookbehindExp(r,positive) => s"(?<${if (positive) "=" else "!"}${r})"
       case IfExp(cond,rt,rf) => s"(?(${cond})${rt}|${rf})"
       case FailEpsExp() => "\u25C7"
+
+      case EnumExp(r) => s"(○${r})"
+      case UnionExp(r1,r2) => s"(${r1}U${r2})"
     }
   }
 
@@ -327,7 +345,10 @@ object RegExp {
             FailEpsExp()
           case BackReferenceExp(n,_) =>
             approximated = true
+            /*
             ConcatExp(replace(removeAssert(groupMap(n))), FailEpsExp())
+            */
+            EnumExp(replace(groupMap(n)))
           case _ => recursiveApply(r,replace)
         }
       }
@@ -369,9 +390,9 @@ object RegExp {
 
     (r2, approximated)
   }
-
   def constructTransducer(r: RegExp[Char], options: PCREOptions = new PCREOptions()
-): DetTransducer[(RegExp[Char], Boolean), Option[Char]] = {
+):NonDetNoAssertTreeTransducer[(Boolean, Option[(RegExp[Char], Boolean)]),Option[Char]]
+= {
     def getElems(r: RegExp[Char]): Set[Char] = {
       r match {
         case ElemExp(a) => if (options.ignoreCase && a.isLetter) Set(a.toLower) else Set(a)
@@ -409,29 +430,35 @@ object RegExp {
     val stack = Stack(initialState)
     var delta = Map[
       ((RegExp[Char], Boolean), Option[Option[Char]]),
-      ATree[(RegExp[Char], Boolean), (RegExp[Char], Boolean)]
+      SetTree[(RegExp[Char], Boolean)]
     ]()
-    implicit val deriver = new RegExpDeriver[StateTBooleanATree](options)
+    implicit val deriver = new RegExpSetTreeDeriver(options)
 
     while (stack.nonEmpty) {
-      Analysis.checkInterrupted("regular expression -> transducer")
       val s @ (r,u) = stack.pop
       sigma.foreach{ a =>
+        Analysis.checkInterrupted("regular expression -> transducer")
         val t = (r.derive(a) >>= {
-          case Some(r) => StateTATreeMonad[RegExp[Char], RegExp[Char]](r)
-          case None => StateTATreeMonad.success[RegExp[Char], RegExp[Char]] // simulates prefix match
+          case Some(r) => StateTSetTreeMonad[RegExp[Char]](r)
+          case None => StateTSetTreeMonad.success[RegExp[Char]] // simulates prefix match
         })(u)
         delta += (s,Some(a)) -> t
-        val newExps = leaves(t).filterNot(states.contains)
-        states |= newExps.toSet
-        stack.pushAll(newExps)
+        for(tree <- t){
+          val newExps = leavesOfTree(tree).filterNot(states.contains)
+          states |= newExps.toSet
+          stack.pushAll(newExps)
+        }
       }
-      val t = (r.deriveEOL >>= (_ => StateTATreeMonad.success[RegExp[Char], RegExp[Char]]))(u)
+      val t = (r.deriveEOL >>= (_ => StateTSetTreeMonad.success[RegExp[Char]]))(u)
       delta += (s,None) -> t
     }
-
-    new DetTransducer(states, sigma, initialState, delta)
+    new NonDetNoAssertTreeTransducer(states, sigma, initialState, delta).Bprune()
   }
+
+  type typeOfTD1 = Either[Option[Char],((Boolean, Option[(matching.regexp.RegExp[Char], Boolean)]),Int)]
+
+  type typeOfTD2 = Option[Char]
+  
 
   def calcTimeComplexity(
     r: RegExp[Char],
@@ -439,22 +466,53 @@ object RegExp {
     method: Option[BacktrackMethod]
   ): (Option[Int], Witness[Char], Boolean, Int) // (degree, witness, approximated?, size of transducer)
   = {
-    def convertWitness(w: Witness[Option[Char]]): Witness[Char] = {
+    def convertWitness2(w: Witness[typeOfTD2]): Witness[Char] = {
       val charForNone = '\u25AE'
-      Witness(w.separators.map(_.map(_.getOrElse(charForNone))), w.pumps.map(_.map(_.getOrElse(charForNone))))
+      def convertNone(e: typeOfTD2): Seq[Char] = {
+        e match{
+          case None => Seq(charForNone)
+          case Some(c) => Seq(c)
+          //case None => Seq.empty//ダミーの文字
+          case _ => Seq.empty
+        }
+        
+      }
+      Witness(w.separators.map(_.flatMap(convertNone)), w.pumps.map(_.flatMap(convertNone)))
     }
+    def convertWitness1(w: Witness[typeOfTD1]): Witness[Char] = {
+      val charForNone = '\u25AE'
+      def convertNone(e: typeOfTD1): Seq[Char] = {
+        e match{
+          case (Left(None)) => Seq(charForNone)
+          case (Left(Some(c))) => Seq(c)
+          case _ => Seq.empty
+        }
+      }
+      Witness(w.separators.map(_.flatMap(convertNone)), w.pumps.map(_.flatMap(convertNone)))
+    }
+
 
     val (rm, approximated) = modifyRegExp(r)
 
-    val transducer = Debug.time("regular expression -> transducer") {
+    val transducer2 = Debug.time("regular expression -> transducer") {
       constructTransducer(rm, options)
-    }.rename()
+    }//.rename()
+    
 
-    val (growthRate, witness) = method match {
-      case Some(method) => transducer.calcGrowthRateBacktrack(method)
-      case None => transducer.calcGrowthRate()
+    method match {
+      case Some(BDM) => 
+        val transducer = Debug.time("regular expression -> transducer") {
+          //最初はこちらを用いて計算
+          transducer2.toDeterministic().toTotal()
+        }//.rename()
+    
+        val (growthRate, witness) = transducer.calcGrowthRate()
+        (growthRate, convertWitness1(witness), approximated, transducer.delta.size)
+      case Some(KM) =>
+          val (growthRate2,witness2) = transducer2.calcGrowthRate()
+        (growthRate2, convertWitness2(witness2), approximated, transducer2.delta.size)
     }
-    (growthRate, convertWitness(witness), approximated, transducer.deltaDet.size)
+
   }
 }
 
