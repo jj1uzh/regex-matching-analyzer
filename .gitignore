@@ -1,3 +1,5 @@
-.DS_Store
 target/
 .metals/
+.git/
+.vscode/
+.bloop/

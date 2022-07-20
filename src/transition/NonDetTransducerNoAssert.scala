@@ -130,7 +130,6 @@ class NonDetNoAssertTreeTransducer[Q,A](
 
     for(q <- this.states){
       Analysis.checkInterrupted("preparing for calculate growth rate")
-      //qから1文字読んで遷移する場合の遷移数の最大値を計算
       val numoftrans = numoftrans_map(q)
 
       //状態，sigmaの構成
@@ -160,18 +159,14 @@ class NonDetNoAssertTreeTransducer[Q,A](
         }
       }
       for(i <- 1 to numoftrans){
-        if(numoftrans > 1){
-          for(qprime <- this.states;j <- 2 to numoftrans_map(q)){
-            val f = (qprime,j)
-            if(q == qprime && i < j){
-              //qと組になっている数字を変える（qとMapの定義域が一致する場合のみ)
-              newdeltaDet += (((q,i),Some(Right(f))) ->  TreeMonad.unit((q,j)))
-            }
-
-            else if(q != qprime){
-              newdeltaDet += (((q,i),Some(Right(f))) ->  TreeMonad.unit((q,i)))
-            }
-
+        for(qprime <- this.states;j <- 2 to numoftrans_map(qprime)){
+          val f = (qprime,j)
+          if(q == qprime && i < j){
+          //qと組になっている数字を変える（qとfの定義域が一致する場合のみ)
+            newdeltaDet += (((q,i),Some(Right(f))) ->  TreeMonad.unit((q,j)))
+          }
+          else if(q != qprime){
+            newdeltaDet += (((q,i),Some(Right(f))) ->  TreeMonad.unit((q,i)))
           }
         }
       }
