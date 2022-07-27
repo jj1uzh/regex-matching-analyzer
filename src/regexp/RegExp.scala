@@ -455,7 +455,7 @@ object RegExp {
     new NonDetNoAssertTreeTransducer(states, sigma, initialState, delta).Bprune()
   }
 
-  type typeOfTD1 = Either[Option[Char],((Boolean, Option[(matching.regexp.RegExp[Char], Boolean)]),Int)]
+  type typeOfTD1 = Either[Option[Char],(Boolean, Option[(matching.regexp.RegExp[Char], Boolean)])]
 
   type typeOfTD2 = Option[Char]
   

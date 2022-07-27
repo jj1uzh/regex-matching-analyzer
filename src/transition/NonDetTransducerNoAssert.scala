@@ -116,10 +116,9 @@ class NonDetNoAssertTreeTransducer[Q,A](
     var newstates = Set[(Q,Int)]()
     val newinitialState = (this.initialState,1)
     //1文字もしくは，Map(Tuple)
-    var newsigma = Set[Either[A,(Q,Int)]]()
-    newsigma = newsigma ++ this.sigma.map(c => Left(c))
+    val newsigma = this.sigma.map(Left(_)) ++ this.states.map(Right(_))
     //遷移規則を作る
-    var newdeltaDet = Map[((Q,Int),Option[Either[A,(Q,Int)]]),Tree[(Q,Int)]]()
+    var newdeltaDet = Map[((Q,Int),Option[Either[A,Q]]),Tree[(Q,Int)]]()
     var numoftrans_map = Map[Q,Int]()
     for(q<-this.states) numoftrans_map += (q -> this.delta.getOrElse((q,None),Set()).size)
     for(q <- this.states;a<-this.sigma){
@@ -136,10 +135,6 @@ class NonDetNoAssertTreeTransducer[Q,A](
       for(i <- 1 to numoftrans){
         //状態と数の組へと変更する
         newstates = newstates ++ Set((q,i))
-        if(numoftrans > 1){
-        //状態と組になっている数字を変更するMap
-          newsigma += Right((q,i))
-        }
       }
       //遷移規則の構成
       for(a <- this.sigma;i <- 1 to numoftrans){
@@ -158,17 +153,17 @@ class NonDetNoAssertTreeTransducer[Q,A](
           }
         }
       }
-      for(i <- 1 to numoftrans){
-        for(qprime <- this.states;j <- 2 to numoftrans_map(qprime)){
-          val f = (qprime,j)
-          if(q == qprime && i < j){
-          //qと組になっている数字を変える（qとfの定義域が一致する場合のみ)
-            newdeltaDet += (((q,i),Some(Right(f))) ->  TreeMonad.unit((q,j)))
+      for(i <- 1 to numoftrans-1){
+        for(qprime <- this.states){
+            val f = qprime
+            if(q == qprime){
+            //qの添字を1増やす
+              newdeltaDet += (((q,i),Some(Right(f))) ->  TreeMonad.unit((q,i+1)))
+            }
+            else if(q != qprime){
+              newdeltaDet += (((q,i),Some(Right(f))) ->  TreeMonad.unit((q,i)))
+              }
           }
-          else if(q != qprime){
-            newdeltaDet += (((q,i),Some(Right(f))) ->  TreeMonad.unit((q,i)))
-          }
-        }
       }
       
       for(i <- 1 to numoftrans){
@@ -194,7 +189,7 @@ class NonDetNoAssertTreeTransducer[Q,A](
 
 
 
-    new DetNoAssertTreeTransducer[(Q,Int),Either[A,(Q,Int)]](newstates,newsigma,newinitialState,newdeltaDet)
+    new DetNoAssertTreeTransducer[(Q,Int),Either[A,Q]](newstates,newsigma,newinitialState,newdeltaDet)
   }
   
 
