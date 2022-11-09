@@ -1,0 +1,37 @@
+input file : /Users/kawamura/Research/regex-matching-analyzer/input/BR_snort.txt
+started at : 2022/10/25 9:37:12
+finished at: 2022/10/25 11:33:38
+
+--- settings ---------------------------
+style: PCRE
+timeout: 10s
+----------------------------------------
+
+--- result -----------------------------
+total       : 1749
+
+constant    : 0
+linear      : 0
+polynomial  : 0
+exponential : 0
+
+approximated: 1239
+  constant   : 0
+  linear     : 3
+  polynomial : 1236
+                    degree 2: 68
+                    degree 3: 401
+                    degree 4: 32
+                    degree 5: 65
+                    degree 6: 15
+                    degree 7: 331
+                    degree 8: 6
+                    degree 10: 12
+                    degree 12: 303
+                    degree 14: 3
+  exponential: 0
+
+timeout     : 510
+skipped     : 0
+error       : 0
+----------------------------------------

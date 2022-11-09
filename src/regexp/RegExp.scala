@@ -348,7 +348,7 @@ object RegExp {
             /*
             ConcatExp(replace(removeAssert(groupMap(n))), FailEpsExp())
             */
-            EnumExp(replace(groupMap(n)))
+            UnionExp(EnumExp(replace(groupMap(n))),EmptyExp[A])
           case _ => recursiveApply(r,replace)
         }
       }
@@ -444,7 +444,7 @@ object RegExp {
         })(u)
         delta += (s,Some(a)) -> t
         for(tree <- t){
-          val newExps = leavesOfTree(tree).filterNot(states.contains)
+          val newExps = flat(tree).filterNot(states.contains)
           states |= newExps.toSet
           stack.pushAll(newExps)
         }

@@ -1,0 +1,3 @@
+/^.*?(?:(<(?:.*?)\s)href\s*=([\s"'])*/?([^\2:#]+?)\2((?:.*?)>)).*$/s
+at most polynomial, degree 4, witness: < ❲<❳^n \nhref= ❲"❳^n ❲"<❳^n, time: 28 ms
+

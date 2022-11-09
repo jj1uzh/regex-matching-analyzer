@@ -16,11 +16,27 @@ object MakeExample{
       case OptionExp(r,greedy) => containBR(r)
       case RepeatExp(r,min,max,greedy) => containBR(r)
       case IfExp(cond,rt,rf) => containBR(cond) || containBR(rt) || containBR(rf)
-      case LookaheadExp(r, positive) => containBR(r)
       case LookbehindExp(r, positive) => containBR(r)
       case _ => false
     }
+  }
 
+    def contain_LA_Bound_If[A](r:RegExp[A]): Boolean = {
+    //先読み，単語境界，状態表現が含まれるか否か
+    r match{
+      case ConcatExp(r1,r2) => contain_LA_Bound_If(r1) || contain_LA_Bound_If(r2)
+      case GroupExp(r, id, name) => contain_LA_Bound_If(r)
+      case AltExp(r1,r2) => contain_LA_Bound_If(r1) || contain_LA_Bound_If(r2)
+      case StarExp(r,greedy) => contain_LA_Bound_If(r)
+      case PlusExp(r,greedy) => contain_LA_Bound_If(r)
+      case OptionExp(r,greedy) => contain_LA_Bound_If(r)
+      case RepeatExp(r,min,max,greedy) => contain_LA_Bound_If(r)
+      case IfExp(cond,rt,rf) => true
+      case LookaheadExp(r, positive) => true
+      case LookbehindExp(r, positive) => contain_LA_Bound_If(r)
+      case BoundaryExp() => true
+      case _ => false
+    }
   }
   def make(args: Array[String]){
     val filepath1 = s"/Users/kawamura/Research/regex-matching-analyzer/input/nakagawa/nakagawa_processed.txt"
@@ -30,6 +46,7 @@ object MakeExample{
     val regExpStrs1 = IO.loadFile(filepath1).getLines.toSeq
     val regExpStrs2 = IO.loadFile(filepath2).getLines.toSeq
     val regExpStrs3 = IO.loadFile(filepath3).getLines.toSeq
+    /*
     val output1 = new File(s"/Users/kawamura/Research/regex-matching-analyzer/input/BR_nakagawa.txt")
     for(regstr <- regExpStrs1){
       try{
@@ -42,12 +59,13 @@ object MakeExample{
         case e: Exception =>
       }
     }
-    /*
+    */
+    
     val output2 = new File(s"/Users/kawamura/Research/regex-matching-analyzer/input/BR_regexlib.txt")
     for(regstr2 <- regExpStrs2){
       try{
         val reg = RegExpParser.parsePCRE(regstr2)
-        if(containBR(reg._1)){
+        if(containBR(reg._1) && !contain_LA_Bound_If(reg._1)){
           output2.writeln(regstr2)
         }
       }
@@ -55,14 +73,13 @@ object MakeExample{
         case e: Exception =>
       }
     }
+    output2.close()
 
-    val output3 = new File(s"/Users/kawamura/Research/regex-matching-analyzer/input/BR_snort_short.txt")
-    var count = 0
+    val output3 = new File(s"/Users/kawamura/Research/regex-matching-analyzer/input/BR_snort.txt")
     for(regstr3 <- regExpStrs3){
       try{
         val reg = RegExpParser.parsePCRE(regstr3)
-        if(containBR(reg._1) && count <= 500){
-          count += 1
+        if(containBR(reg._1)&& !contain_LA_Bound_If(reg._1)){
           output3.writeln(regstr3)
         }
       }
@@ -70,7 +87,9 @@ object MakeExample{
         case e: Exception =>
       }
     }
-    */
+
+    output3.close()
+    
 
 
   }

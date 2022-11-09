@@ -1,0 +1,45 @@
+/^.*?(?:(\S*)onunload\s*\x3D\s*([^\x3B]*)\x3B\s*\x7D\s*function\2\s*\x28\s*\x29\s*\x7B[^\x7D]*\1open[^\x7D]*\x7D).*$/s
+at most polynomial, degree 6, witness: } ❲n❳^n nonunload= ❲␣❳^n ;}function ❲(){❳^n ❲t❳^n ❲open❳^n, time: 70 ms
+
+/^.*?(?:<\s*script\s*\S*\s*>.*?[a-z0-9_-]+\.OcxSpool\s*\x28\s*([\x22\x27])[^\1]*(\x25[dlnpsx])[^\1]*\1).*$/s
+at most polynomial, degree 6, witness: < ❲<script<❳^n ❲>❳^n ❲d❳^n .OcxSpool(" ❲%d❳^n ❲"<❳^n, time: 23 ms
+
+/^.*?(?:function\s+(?P<function>[a-z0-9_]+)\s*\x28.*?document\.write(ln)?\s*\x28.*?\x29.*?<iframe[^>]*?onreadystatechange\s*=\s*(\x22|\x27)\s*(?P=function)).*$/s
+at most polynomial, degree 6, witness: < ❲function\nd(❳^n ❲document.write(❳^n ❲)❳^n ❲<iframe❳^n onreadystatechange="d ❲d❳^n, time: 50 ms
+
+/^.*?(?:function\s+[a-z0-9_]+\s*\x28.*?(?P<var>[a-z0-9_]+)\s*=\s*[^\x3B]*?\x2Erecordset\x3B.*?(?P=var)\x2EcacheSize\s*=\s*-0x.*?(?P=var)\x2EMove).*$/s
+at most polynomial, degree 6, witness: d ❲function\fe(❳^n 3 ❲e❳^n e= ❲\n❳^n .recordset; ❲ve.cacheSize=-0x❳^n ve ❲d.Move❳^n, time: 134 ms
+
+/^.*?(?:(^|\s*)([^\s]+)\s*\x3D\s*document\x2EstyleSheets\x5B\d+\x5D\x2Eimports.*(document|body)\x2EremoveChild.*\2).*$/s
+at most polynomial, degree 6, witness: d ❲\n❳^n d ❲=document.styleSheets[4].imports❳^n ❲body.removeChild❳^n ❲d❳^n ❲d❳^n, time: 33 ms
+
+/^.*?(?:function\s+([^\s]+)\x28.*document\x2egetElementById\x28\x22([^\x22]+)\x22\x29\x2einnerHTML=\x22\x22.*id\s*=\s*\x22\2\x22.*onCellChange\s*=\s*\x22\1\x28\x29\x3b\x22).*$/s
+at most polynomial, degree 6, witness: function\f) ❲;"(❳^n ;" ❲);"document.getElementById("T").innerHTML=""❳^n );" ❲id="T"❳^n T ❲"onCellChange="T❳^n " ❲);"();"❳^n );", time: 111 ms
+
+/^.*?(?:<div[^>]+id\s*=\s*(\x22|\x27|)(?P<id>[^\x22\x27\x20\x3E]+)[^>]*>.*?(?P=id)\.innerHTML).*$/s
+at most polynomial, degree 6, witness: < ❲nnerHTML<divi❳^n nnerHTMLid= ❲\t❳^n \f ❲rHTML❳^n rHTML> ❲L❳^n L ❲TML.innerHTML❳^n TML, time: 64 ms
+
+/^.*?(?:(<\w+\s+id\s*=\s*(?P<m1>\x22|\x27|)(?P<id1>.+?)(?P=m1).*?(\w+\.getElementById\((?P<m2>\x22|\x27|)(?P=id1)(?P=m2)\)|(?P<elem>\w+)\s*=\s*document\.getElementById\((?P<m3>\x22|\x27|)(?P<id2>.+?)(?P=m3)\).*?(?P=elem)\.(inner|outer)HTML\s*(\+?=)\s*)|\w+\.getElementById\((?P<m5>\x22|\x27|)(?P<id3>.+?)(?P=m5)\).*?<\w+\s+id\s*=\s*(?P<m6>\x22|\x27|)(?P=id3)(?P=m6))).*$/s
+at most polynomial, degree 6, witness: <1\rid= ❲\r❳^n F ❲uterHTML=❳^n uterHTML= ❲W=document.getElementById(1❳^n F ❲uterHTML=)❳^n uterHTML= ❲1❳^n, time: 1428 ms
+
+/^.*?(?:(\S*)\x2EouterHTML\s*\x3D.*CollectGarbage\s?\x28\x29.*\1\x2EinnerHTML).*$/s
+at most polynomial, degree 6, witness: r ❲r❳^n a ❲nerHTML.outerHTML=❳^n nerHTML ❲CollectGarbage()❳^n T ❲TML❳^n TML ❲nnerHTML.innerHTML❳^n nnerHTML, time: 97 ms
+
+/^.*?(?:doMouseLeave[^\x7D]*([^\x7D\s]*)\s*\x3D\s*window\x2Eevent\x2EsrcElement[^\x7D]*\1\x2EparentNode\x2EinnerHTML\s*\x3D\s*\x22).*$/s
+at most polynomial, degree 6, witness: M ❲L="doMouseLeave❳^n L=" ❲e.innerHTML="❳^n e.inner ❲HTML="=window.event.srcElement❳^n HTML=" ❲nnerHTML="❳^n nnerH ❲TML=".parentNode.innerHTML="❳^n TML=", time: 410 ms
+
+/^.*?(?:id=\s*([^>]+)>.*?<script>.*?getElementByID\s*\x28[^\x29]*?\1\s*(\x22|\x27)\x29\x2EinnerHTML).*$/s
+at most polynomial, degree 6, witness: id= ❲\t❳^n > ❲<script>❳^n T ❲LgetElementByID(❳^n L ❲␣❳^n ❲␣❳^n ').innerHTML, time: 165 ms
+
+/^.*?(?:getElementById\(\x22(.*?)\x22\)\.sheet\.rules\[\d+\].*?([A-Z\d_]+)\s*=\s*document\.getElementById\(\x22\1\x22\).*?\s+\2\.parentElement).*$/s
+at most polynomial, degree 6, witness: E ❲parentElementgetElementById("❳^n parentElemen ❲t").sheet.rules[7]❳^n t ❲parentElementV=document.getElementById("❳^n pare ❲ntElement")❳^n n ❲tElement\rV.parentElement❳^n tElement, time: 578 ms
+
+/^.*?(?:.*?(\w*)\s*=\s*SVGDocument.*var\s*point\s*=.*?get\s*(x|y)\s*\x28\s*\x29\s*\x7B\s*\1\.parentNode\.removeChild\x28\1\x29.*?alert\x28\1\.getCharNumAtPosition\x28point\x29).*$/s
+at most polynomial, degree 6, witness: ) ❲etCharNumAtPosition(point)❳^n etC ❲harNumAtPosition(point)=SVGDocument❳^n harNumAtPo ❲sition(point)varpoint=❳^n sition(point) ❲mAtPosition(point)getx(){.parentNode.removeChild()❳^n mAtPosition(point) ❲getCharNumAtPosition(point)alert(.getCharNumAtPosition(point)❳^n getCharNumAtPosition(point), time: 1870 ms
+
+/^.*?(?:\x23(\w*)\s*\x7B[^\x7D]*moz\x2Dbinding[^\x29]*xbl.*?[\x7D].*?\1\.[^\x3B]*\.eval).*$/s
+at most polynomial, degree 6, witness: v ❲al#{❳^n al.e ❲valmoz-binding❳^n val; ❲alxbl❳^n al ❲eval}❳^n eval.e ❲val.❳^n val, time: 257 ms
+
+/^.*?(?:if\x28\s*(?P<var>[^\s]*)\s*\x3D\x3D\s*\x27(\x26|\x3f|\x3d|\x25|\s)\x27.*?(?P=var)\s*\x3d\s*escape\x28\s*(?P=var)\s*\x29\x3b).*$/s
+at most polynomial, degree 6, witness: c ❲;if(c❳^n ; ❲);=='&'❳^n ) ❲;❳^n ❲;=escape(c❳^n ; ❲);❳^n );, time: 26 ms
+

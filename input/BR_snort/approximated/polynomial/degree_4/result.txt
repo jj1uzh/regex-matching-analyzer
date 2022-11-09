@@ -1,0 +1,96 @@
+/^.*?(?:var\s*(\w+)\s*\x3D\s*\x22\x5Cx00\x5Cx00\x5Cx00\x5Cx00.*\x22.*Collab\x2EremoveStateModel\s*\x28\s*\1.*\x29).*$/s
+at most polynomial, degree 4, witness: d ❲vard="\\x00\\x00\\x00\\x00❳^n ❲"❳^n Collab.removeStateModel(d ❲d❳^n, time: 87 ms
+
+/^.*?(?:stream\s*?app\x2Eaddtoolbutton\x28\x7B[^\x7d]*?\x09cname\x3A\s*?\x22(?P<buttonname>\w+?)[^\x7D]*?\x09cenable\x3A\s*?\x22app\x2Eremovetoolbutton\x28\x27(?P=buttonname)\x27\x29[^\x7D]*?\x7D\x29\x3B\s*?endstream).*$/s
+at most polynomial, degree 4, witness: } ❲treamstreamapp.addtoolbutton({❳^n tream\tcname:"Z ❲m❳^n m ❲eam\tcenable:"app.removetoolbutton('m')❳^n eam});endstream, time: 1550 ms
+
+/^.*?(?:<(?P<t>[\w\x2D\x2E]+)\x3A[^>]+>.*?<(?P=t)\x3Astroke\s+[^>]*src\s*=\s*(?P<q>\x22|\x27)[\w\x25\x2D\x2E\x2F\x3A]+\x2E\w{2,4}(?P=q)).*$/s
+at most polynomial, degree 4, witness: < ❲<d:<>❳^n <d:stroke\n ❲\n❳^n ❲src="d.dd"<❳^n, time: 61 ms
+
+/^.*?(?:(?P<q1>[A-Z\d_]+)\.onpropertychange\s*=\s*(?P=q1)\.attributes.*?(?P=q1)\.onpropertychange\s*=\s*null.*?(?P=q1)\.onpropertychange).*$/s
+at most polynomial, degree 4, witness: e ❲R❳^n .onpropertychange=R.attributes ❲R❳^n .onpropertychange=null ❲ropertychangeR.onpropertychange❳^n ropertychange, time: 602 ms
+
+/^.*?(?:(?P<class>[A-Z\d_]+)\s*\x7Bbehavior\s*\x3a\s*url\x28\x23default\x23userData\x29.*?(?P<obj>[A-Z\d_]+)\x2EsetAttribute\x28[^,]+,\s*[A-Z]\x29.*?\x3cMARQUEE\s*id\x3d\x22(?P=obj)\x22\s*class\x3d\x22(?P=class)).*$/s
+at most polynomial, degree 4, witness: < ❲L❳^n {behavior:url(#default#userData) ❲L.setAttribute(<,L)❳^n <MARQUEEid="L"class="L ❲L❳^n, time: 101 ms
+
+/^.*?(?:(\w+)\x2esetcapture\x28\x29.*\1[^\x3e]*onclick\x3d).*$/s
+at most polynomial, degree 4, witness: = ❲f.setcapture()❳^n onclick= ❲d❳^n ❲d❳^n, time: 241 ms
+
+/^.*?(?:(\w+)\x2EremoveNode\s*\x28true\x29.*\1\x2EremoveNode\s*\x28\x29.*\1\x2E[^r]+).*$/s
+at most polynomial, degree 4, witness: r ❲r.removeNode(true)❳^n ❲r.removeNode()❳^n r ❲F.F❳^n x, time: 59 ms
+
+/^.*?(?:(?P<q1>[A-Z\d_]+)\.onpropertychange\s*=\s*(?P=q1)\.childNode.*?(?P=q1)\.onpropertychange\s*=\s*null.*?(?P=q1)\.onpropertychange).*$/s
+at most polynomial, degree 4, witness: E ❲onpropertychangeF.onpropertychange=F.childNode❳^n onpropertychange ❲F❳^n .onpropertychange=null ❲F.onpropertychange❳^n, time: 543 ms
+
+/^.*?(?:<(?P<t>[\w\x2D\x2E]+)\x3A[^>]+>.*?<(?P=t)\x3Avmlframe\s+[^>]*src\s*=\s*(?P<q>\x22|\x27)[\w\x25\x2D\x2E\x2F\x3A]+\x2E\w{2,4}(?P=q)).*$/s
+at most polynomial, degree 4, witness: < ❲<d:<>❳^n <d:vmlframe\n ❲\n❳^n ❲src="d.dd"<❳^n, time: 50 ms
+
+/^.*?(?:(\w+)\.insertCell.*\1\.deleteCell.*\1\.clearAttributes).*$/s
+at most polynomial, degree 4, witness: f ❲utes.insertCell❳^n utes ❲arAttributes.deleteCell❳^n arAttribute ❲s.clearAttributes❳^n s, time: 426 ms
+
+/^.*?(?:<v\s*\x3a\s*(image|imagedata|fill|stroke)\s+id\s*=\s*\x22([^\x22]*)\x22[^\x3E]*style\s*=\s*\x22[^\x22]*\x23default\x23VML[^\x22]*\x22.*document\x2EgetElementById\s*\x28\s*\x22\2\x22\s*\x29\x2Esrc\s+\x3D).*$/s
+at most polynomial, degree 4, witness: r ❲c\n=<v:fill\tid=""❳^n c\n=style=" ❲.src\n=#default#VML❳^n .src\n=" ❲=document.getElementById("").src\n=❳^n =, time: 336 ms
+
+/^.*?(?:(?P<q1>\w+)\x3Dwindow\x2EcreatePopup.*?onmousedown[^\x3C]*(?P=q1)\x2Eshow).*$/s
+at most polynomial, degree 4, witness: w ❲show❳^n show=window.createPopup ❲onmousedown❳^n ❲F.show❳^n, time: 100 ms
+
+/^.*?(?:iframe\s+src\s*\x3D\s*(\x22|\x27)[^\1]+\x2Egif\1\s+onload\s*\x3D\s*(\x22|\x27)[^\2]+\x28event\x29\2).*$/s
+at most polynomial, degree 4, witness: d ❲iframe\nsrc="d❳^n ❲.gif"\nonload="d❳^n ❲(event)"d❳^n, time: 18 ms
+
+/^.*?(?:function\s+([a-z0-9_]+)\s*\x28.*?ActiveXObject\s*\x28\s*\x22Microsoft\.XMLHTTP\x22\s*\x29.*?setInterval\s*\x28\s*\x22\1).*$/s
+at most polynomial, degree 4, witness: d ❲function\nd(❳^n ❲ActiveXObject("Microsoft.XMLHTTP")❳^n setInterval("d ❲d❳^n, time: 53 ms
+
+/^.*?(?:(^|[^\w])(?P<obj>\w+)\.parentNode\.style\.[^\s]+\s*=.*?(?P=obj)\.focus).*$/s
+at most polynomial, degree 4, witness: S ❲ocus.F.parentNode.style.S❳^n ❲ocus=❳^n oc ❲us.focus❳^n us, time: 133 ms
+
+/^.*?(?:SetQueryFromURL\((?P<q1>\x22|\x27|)[^\)]*\x25{2,}[^\)]*(?P=q1)\)).*$/s
+at most polynomial, degree 4, witness: " ❲SetQueryFromURL("❳^n ❲%%❳^n ❲%❳^n, time: 5 ms
+
+/^.*?(?:([A-Z\d_]+)\.addBehavior\x28.*?\.onreadystatechange\s*=\s*function[^\x7B]+\x7B[^\x7D]*\1\.innerHTML).*$/s
+at most polynomial, degree 4, witness: E ❲nnerHTML.addBehavior(❳^n nne ❲rHTML.onreadystatechange=functiond❳^n rHTML{ ❲TML.innerHTML❳^n TML, time: 265 ms
+
+/^.*?(?:\x3Cinput\s+type\x3D\x22checkbox\x22\s+id\x3D(?P<q1>(\x22|\x27|))(?P<t>\S+)(?P=q1).*?document\x2EgetElementById\x28(?P<q2>(\x22|\x27|))(?P=t)(?P=q2)\x29\x2EcreateTextRange).*$/s
+at most polynomial, degree 4, witness: <input\ntype="checkbox"\nid=e ❲ateTextRange❳^n ateTextRange ❲reateTextRangedocument.getElementById(e❳^n reateText ❲Range).createTextRange❳^n Range, time: 376 ms
+
+/^.*?(?:\x3Cinput\s+type\x3D\x22image\x22\s+id\x3D(?P<q1>(\x22|\x27|))(?P<t>\S+)(?P=q1).*?document\x2EgetElementById\x28(?P<q2>(\x22|\x27|))(?P=t)(?P=q2)\x29\x2EcreateTextRange).*$/s
+at most polynomial, degree 4, witness: <input\ftype="image"\fid=x ❲eTextRang❳^n eTextRang ❲edocument.getElementById(e❳^n e ❲ge).createTextRange❳^n ge, time: 360 ms
+
+/^.*?(?:(?P<q1>[a-zA-Z0-9]*)\x2ehref\s*\x3d.*(?P=q1)\x2erel\s*\x3d.*(?P=q1)\x2ehref\s*\x3d).*$/s
+at most polynomial, degree 4, witness: F ❲F❳^n .href= ❲f=.rel=❳^n f= ❲F❳^n, time: 82 ms
+
+/^.*?(?:<(?P<t>[\w\x2D\x2E]+)\x3A[^>]+>.*?<(?P=t)\x3Aimagedata\s+[^>]*src\s*=\s*(?P<q>\x22|\x27)[\w\x25\x2D\x2E\x2F\x3A]+\x2E\w{2,4}(?P=q)).*$/s
+at most polynomial, degree 4, witness: < ❲<d:<❳^n ><d:imagedata\n ❲\n❳^n ❲src="d.dd"<❳^n, time: 54 ms
+
+/^.*?(?:\x3Cinput\s+type\x3D\x22radio\x22\s+id\x3D(?P<q1>(\x22|\x27|))(?P<t>\S+)(?P=q1).*?document\x2EgetElementById\x28(?P<q2>(\x22|\x27|))(?P=t)(?P=q2)\x29\x2EcreateTextRange).*$/s
+at most polynomial, degree 4, witness: <input␣type="radio"␣id=r ❲ateTextRange❳^n ateTextRan ❲gedocument.getElementById(e❳^n ge ❲xtRange).createTextRange❳^n xtRange, time: 373 ms
+
+/^.*?(?:(\w+)\s*\x3D\s*\w+\x2EcreateEventObject.*\1\x2E(Type|PropertyName|Qualifier|SrcUrn).*\x2EcreateEventObject\s*\x28\s*\1\s*\x29).*$/s
+at most polynomial, degree 4, witness: d ❲d❳^n =d.createEventObject ❲d.Type❳^n ❲.createEventObject(F)❳^n, time: 110 ms
+
+/^.*?(?:<colgroup\s+[^>]*id\s*=\s*(?P<q1>\x22|\x27|)(?P<q2>\w+)(?P=q1)[^>]*>.*\s+(?P=q2)(\.delete)|(\.test)).*$/s
+at most polynomial, degree 4, witness: <colgroup\n ❲\n❳^n id=d ❲elet❳^n elete> ❲delete\ft.delete❳^n delete, time: 766 ms
+
+/^.*?(?:where[\s\x28]+(?P<var>[^\s]+)\s+[^\x01]*?(and|or|not)[\s\x28]+(?P=var)\s).*$/s
+at most polynomial, degree 4, witness: where\n ❲(❳^n \n ❲\n❳^n or\n ❲(\n❳^n, time: 6 ms
+
+/^.*?(?:((?P<m1>\$\w+)\s*=\s*(?P<q1>[\x22\x27])\s*[^(?P=q1)]+(\\x80|\x80).*?crypt\(\s*(?P=m1)|crypt\(\s*(?P<q2>[\x22\x27])\s*[^(?P=q1)]+(\\x80|\x80))).*$/s
+at most polynomial, degree 4, witness: $0=' ❲\r❳^n 2 ❲0\x80❳^n 0\x80crypt('B\x80crypt($1 ❲80❳^n 80\x80, time: 1008 ms
+
+/^.*?(?:global\s+(?P<global>\$\w+)\s*\x3b\s*(?P=global)\s*=.*?\{\s*eval\(\s*stripslashes\(\s*\$_REQUEST\[\x5c'.*?function_exists\(\s*(?P<q>.)(exec|passthru|system|shell_exec|exec_popen)(?P=q)\s*\)).*$/s
+at most polynomial, degree 4, witness: d ❲global\n$d;$d=❳^n ❲{eval(stripslashes($_REQUEST[\\'❳^n ❲function_exists(dexec\f)❳^n, time: 169 ms
+
+/^.*?(?:(?P<obj>[A-Z\d_]+)\s*=\s*document\.createElement\((?P<q1>\x22|\x27|)OBJECT(?P=q1)\).*?(?P=obj)\.classid\s*=\s*(?P<q2>\x22|\x27|)clsid\x3ACAFEEFAC-DEC7-0000-0000-ABCDEFFEDCBA(?P=q2).*?(?P=obj)\.launch\().*$/s
+at most polynomial, degree 4, witness: ( ❲F❳^n =document.createElement(OBJECT) ❲aunch(F.classid=clsid:CAFEEFAC-DEC7-0000-0000-ABCDEFFEDCBAW❳^n aunch( ❲F❳^n, time: 352 ms
+
+/^.*?(?:\x3c(?P<string>\w+)\x3apresent.*?\x3c(?P=string)\x3ainteractive.*?\x3c\x2f(?P=string)\x3ainteractive).*$/s
+at most polynomial, degree 4, witness: t ❲eractive<1:present❳^n eractive ❲teractive<1:interactive❳^n terac ❲tive</1:interactive❳^n tive, time: 348 ms
+
+/^.*?(?:\x2egetelementbyid\x28(?P<m1>\x22|\x27|)(?P<q1>\w+?)(?P=m1).*?\x2eremoveChild\x28(?P<m2>\x22|\x27|)(?P=q1)(?P=m2).*?\x2eappendChild\x28(?P<m3>\x22|\x27|)(?P=q1)(?P=m3)).*$/s
+at most polynomial, degree 4, witness: .getelementbyid(d ❲d❳^n .removeChild(d ❲d❳^n .appendChild(d ❲d❳^n, time: 55 ms
+
+/^.*?(?:var\s+(\w+)\s*\x3D\s*parent\s*\x3b.*\1\x2Eprompt.*\1\x2Eclose).*$/s
+at most polynomial, degree 4, witness: e ❲losevar␣S=parent;❳^n ❲lose❳^n lose.prompt ❲lose.close❳^n lose, time: 150 ms
+
+/^.*?(?:\x2epostMessage\s*\x28\s*([^\s]+)\x2edata\x2econcat\s*\x28\1\x2edata\s*\x29).*$/s
+at most polynomial, degree 4, witness: \f ❲ta).postMessage()❳^n t ❲a).data.concat()❳^n a) ❲data).data)❳^n data), time: 34 ms
+

@@ -1,0 +1,24 @@
+/^.*?(?:(\[(\w+)\s*(([\w]*)=('|")?([a-zA-Z0-9|:|\/|=|-|.|\?|&]*)(\5)?)*\])([a-zA-Z0-9|:|\/|=|-|.|\?|&|\s]+)(\[\/\2\])).*$/s
+at most exponential, witness: [d=d ❲=d❳^n, time: 68 ms
+
+/^.*?(?:<(script|style)[^>]*?>(?:.|\n)*?</\s*\1\s*>).*$/s
+at most exponential, witness: <style> ❲\n❳^n, time: 22 ms
+
+/^.*?(?:<(?<tag>\w*|\w*\.+\w*)>+((.|[\n\t\f\r\s])*?)<\/\k<tag>>).*$/s
+at most exponential, witness: <>< ❲\n❳^n, time: 32 ms
+
+/^.*?(?:<!--\s*\#\s*include\s+(file|virtual)\s*=\s*(["'])([^"'<>\|\b]+/)*([^"'<>/\|\b]+)\2\s*-->).*$/s
+at most exponential, witness: <!--#include\nfile=" ❲d/d/❳^n, time: 66 ms
+
+/^(?:\s*\w+\s*\((\s*(("|')([^\3]+|\\\3)\3|\$?[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]|[0-9]*)\s*,?)*\s*\)).*$/s
+at most exponential, witness: F(\t ❲\t❳^n (), time: 581 ms
+
+/^.*?(?:<(\w+)(\s(\w*=".*?")?)*((/>)|((/*?)>.*?</\1>))).*$/s
+at most exponential, witness: <1\n="" ❲\n=""\n=""❳^n <x/>, time: 316 ms
+
+/^.*?(?:(?<quote>["]?)(?<param>(?:\k<quote>{2}|[^"]+)*)\k<quote>[ ]+).*$/s
+at most exponential, witness: " ❲""❳^n, time: 6 ms
+
+/^((\'|\")?[a-zA-Z]+(?:\-[a-zA-Z]+)?(?:s\'|\'[a-zA-Z]{1,2})?(?:(?:(?:\,|\.|\!|\?)?(?:\2)?)|(?:(?:\2)?(?:\,|\.|\!|\?)?))(?: (\'|\")?[a-zA-Z]+(?:\-[a-zA-Z]+)?(?:s\'|\'[a-zA-Z]{1,2})?(?:(?:(?:\,|\.|\!|\?)?(?:\2|\3)?)|(?:(?:\2|\3)?(?:\,|\.|\!|\?)?)))*)$/s
+at most exponential, witness: d␣d! ❲"␣d!❳^n ␣, time: 242 ms
+

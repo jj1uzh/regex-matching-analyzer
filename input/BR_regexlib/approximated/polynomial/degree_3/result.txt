@@ -1,0 +1,15 @@
+/^.*?(?:(\w+)\s+\1).*$/s
+at most polynomial, degree 3, witness: d ❲d❳^n \nd ❲d❳^n, time: 119 ms
+
+/^.*?(?:<(tag1|tag2)[^>]*\/?>.*<\/(?:\1)>).*$/s
+at most polynomial, degree 3, witness: < ❲<tag2>❳^n ❲</tag2>❳^n, time: 30 ms
+
+/^.*?(?:(<(tag1|tag2)[^>]*\/?>)[\w\S\s]*?(<\/(?:\2)>)).*$/s
+at most polynomial, degree 3, witness: < ❲<tag2>❳^n ❲</tag1>❳^n, time: 70 ms
+
+/^.*?(?:(([IXCM])\2{3,})|[^IVXLCDM]|([IL][LCDM])|([XD][DM])|(V[VXLCDM])|(IX[VXLC])|(VI[VX])|(XC[LCDM])|(LX[LC])|((CM|DC)[DM])|(I[VX]I)|(X[CL]X)|(C[DM]C)|(I{2,}[VX])|(X{2,}[CL])|(C{2,}[DM])).*$/s
+at most polynomial, degree 3, witness: C ❲IIII❳^n IM ❲I❳^n I, time: 193 ms
+
+/^.*?(?:(.)\1{2,}).*$/s
+at most polynomial, degree 3, witness: ▮ ❲▮▮▮❳^n ❲▮❳^n, time: 3 ms
+

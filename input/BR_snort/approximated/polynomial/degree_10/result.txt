@@ -1,0 +1,36 @@
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*44990200-3c9d-426d-81df-aab636fa4345\s*}?\4.*\3\.(EnableExtension)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*44990200-3c9d-426d-81df-aab636fa4345\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(EnableExtension)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\r❳^n ❲\r❳^n classid= ❲\r❳^n clsid: ❲\r❳^n 44990200-3c9d-426d-81df-aab636fa4345 ❲\r❳^n ❲\r❳^n id=" ❲sion("(❳^n sion( ❲leExtension(❳^n leExtension( ❲bleExtension(.EnableExtension(❳^n bleExtension(, time: 1381 ms
+
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*0B9C9C7D-ED81-4594-AFCB-FC5588125382\s*}?\4.*\3\.(LoadLibrary)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*0B9C9C7D-ED81-4594-AFCB-FC5588125382\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(LoadLibrary)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\f❳^n ❲\f❳^n classid= ❲\f❳^n clsid: ❲\f❳^n 0B9C9C7D-ED81-4594-AFCB-FC5588125382 ❲\f❳^n ❲\f❳^n id=' ❲('(❳^n ( ❲LoadLibrary(❳^n LoadLibrar ❲y(.LoadLibrary(❳^n y(, time: 803 ms
+
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*DA2BD42B-07E8-413A-9FEA-BB3B2E825340\s*}?\4.*\3\.(Analizar|Reinicializar)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*DA2BD42B-07E8-413A-9FEA-BB3B2E825340\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(Analizar|Reinicializar)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\r❳^n ❲\r❳^n classid= ❲\r❳^n clsid: ❲\r❳^n DA2BD42B-07E8-413A-9FEA-BB3B2E825340 ❲\r❳^n ❲\r❳^n id=' ❲nicializar("i❳^n nicial ❲izar(❳^n izar( ❲nalizar(.Analizar(❳^n nalizar(, time: 1128 ms
+
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*EC4CF635-D196-11CE-9027-02608C4BF3B5\s*}?\4.*\3\.(UpdateRecord)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*EC4CF635-D196-11CE-9027-02608C4BF3B5\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(UpdateRecord)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\f❳^n ❲\f❳^n classid= ❲\f❳^n clsid: ❲\f❳^n EC4CF635-D196-11CE-9027-02608C4BF3B5 ❲\f❳^n ❲\f❳^n id=' ❲('d❳^n ( ❲rd(❳^n rd( ❲eRecord(.UpdateRecord(❳^n eRecord(, time: 1094 ms
+
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*7261EE42-318E-490A-AE8F-77649DBA1ECA\s*}?\4.*\3\.(LoadLibrary)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*7261EE42-318E-490A-AE8F-77649DBA1ECA\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(LoadLibrary)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\f❳^n ❲\f❳^n classid= ❲\f❳^n clsid: ❲\f❳^n 7261EE42-318E-490A-AE8F-77649DBA1ECA ❲\f❳^n ❲\f❳^n id=' ❲oadLibrary("(❳^n oadLibrar ❲y(❳^n y( ❲adLibrary(.LoadLibrary(❳^n adLibrary(, time: 1165 ms
+
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*DA2BD42B-07E8-413A-9FEA-BB3B2E825340\s*}?\4.*\3\.(ObtenerTamano)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*DA2BD42B-07E8-413A-9FEA-BB3B2E825340\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(ObtenerTamano)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\f❳^n ❲\f❳^n classid= ❲\f❳^n clsid: ❲\f❳^n DA2BD42B-07E8-413A-9FEA-BB3B2E825340 ❲\f❳^n ❲\f❳^n id=" ❲o("(❳^n o( ❲tenerTamano(❳^n tenerTamano( ❲ObtenerTamano(.ObtenerTamano(❳^n ObtenerTamano(, time: 1109 ms
+
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*66F50F46-70A0-4A05-BD5E-FBCC0F9641EC\s*}?\4.*\3\.(remove)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*66F50F46-70A0-4A05-BD5E-FBCC0F9641EC\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(remove)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\t❳^n ❲\t❳^n classid= ❲\t❳^n clsid: ❲\t❳^n 66F50F46-70A0-4A05-BD5E-FBCC0F9641EC ❲\t❳^n ❲\t❳^n id=" ❲emove("r❳^n e ❲move(❳^n move ❲(.remove(❳^n (, time: 505 ms
+
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*54BDE6EC-F42F-4500-AC46-905177444300\s*}?\4.*\3\.(DownloadAgent)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*54BDE6EC-F42F-4500-AC46-905177444300\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(DownloadAgent)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\f❳^n ❲\f❳^n classid= ❲\f❳^n clsid: ❲\f❳^n 54BDE6EC-F42F-4500-AC46-905177444300 ❲\f❳^n ❲\f❳^n id=" ❲ent("(❳^n ent( ❲gent(❳^n g ❲ent(.DownloadAgent(❳^n ent(, time: 1047 ms
+
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*00000514-0000-0010-8000-00AA006D2EA4\s*}?\4.*\3\.(Execute)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*00000514-0000-0010-8000-00AA006D2EA4\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(Execute)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\t❳^n ❲\t❳^n classid= ❲\t❳^n clsid: ❲\t❳^n 00000514-0000-0010-8000-00AA006D2EA4 ❲\t❳^n ❲\t❳^n id=" ❲ecute('}❳^n ecute ❲(❳^n ( ❲.Execute(❳^n, time: 638 ms
+
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*EC5D5118-9FDE-4A3E-84F3-C2B711740E70\s*}?\4.*\3\.(DownloadCertificateExt)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*EC5D5118-9FDE-4A3E-84F3-C2B711740E70\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(DownloadCertificateExt)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\n❳^n ❲\n❳^n classid= ❲\n❳^n clsid: ❲\n❳^n EC5D5118-9FDE-4A3E-84F3-C2B711740E70 ❲\n❳^n ❲\n❳^n id=" ❲nloadCertificateExt('▮❳^n nloadCertificat ❲eExt(❳^n eExt( ❲rtificateExt(.DownloadCertificateExt(❳^n rtificateExt(, time: 2322 ms
+
+/^.*?(?:<OBJECT\s*[^>]*\s*id\s*=((\x22|\x27)([^\2]*)\2)\s*classid\s*=\s*(\x22|\x27|)clsid\s*\x3a\s*{?\s*67DABFBF-D0AB-41fa-9C46-CC0F21721616\s*}?\4.*\3\.(Resize)\(|<OBJECT\s*[^>]*\s*classid\s*=\s*(\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*67DABFBF-D0AB-41fa-9C46-CC0F21721616\s*}?\s*\6\s*id\s*=\s*((\x22|\x27)([^\8]*)\8).*\9\.(Resize)\().*$/s
+at most polynomial, degree 10, witness: <OBJECT ❲\f❳^n ❲\f❳^n classid= ❲\f❳^n clsid: ❲\f❳^n 67DABFBF-D0AB-41fa-9C46-CC0F21721616 ❲\f❳^n ❲\f❳^n id=" ❲ze("(❳^n ze( ❲F❳^n f ❲size(.Resize(❳^n size(, time: 471 ms
+
+/^.*?(?:(<object\s*[^>]*\s*id\s*=\s*(?P<m1>\x22|\x27|)(?P<id1>.+?)(?P=m1)(\s|>)[^>]*\s*classid\s*=\s*(?P<q1>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*D27CDB6E-AE6D-11CF-96B8-444553540000\s*}?\s*(?P=q1)(\s|>)|<object\s*[^>]*\s*classid\s*=\s*(?P<q2>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*D27CDB6E-AE6D-11CF-96B8-444553540000\s*}?\s*(?P=q2)(\s|>)[^>]*\s*id\s*=\s*(?P<m2>\x22|\x27|)(?P<id2>.+?)(?P=m2)(\s|>))).*$/s
+at most polynomial, degree 10, witness: <object ❲\n❳^n ❲\n❳^n id= ❲\n❳^n ❲\n❳^n ❲\n❳^n classid= ❲\n❳^n clsid: ❲\n❳^n D27CDB6E-AE6D-11CF-96B8-444553540000 ❲\n❳^n ❲\n❳^n, time: 108 ms
+

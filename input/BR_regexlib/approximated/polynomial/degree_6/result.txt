@@ -1,0 +1,3 @@
+/^.*?(?:<(?<tag>.*).*>(?<text>.*)</\k<tag>>).*$/s
+at most polynomial, degree 6, witness: < ❲<❳^n ❲<❳^n ❲>❳^n ❲</❳^n ❲>❳^n, time: 8 ms
+

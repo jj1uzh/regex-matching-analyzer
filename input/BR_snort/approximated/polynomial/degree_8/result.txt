@@ -1,0 +1,18 @@
+/^.*?(?:create view\s*[^\s]*\s*as select\s+([^\x2e]+)\x2e.*\1\x2E.*from sys\x2E[^\s]*\s*\1\x2C\s*sys\x2E[^\s]*\s*([^\s]+)\s*where\s*\1\x2e[^\s\x3D]+\s*\x3D\s*\2\x2E).*$/s
+at most polynomial, degree 8, witness: create␣view ❲\n❳^n as␣select\n ❲\n❳^n . ❲h.❳^n from␣sys.\n ❲\n❳^n ,sys. ❲h❳^n where ❲\n❳^n .h=h ❲.❳^n, time: 40 ms
+
+/^.*?(?:(^|\s)(?P<var>[^\s]+)\s*=\s*\x22\x5c\x5c[^\x22]*\x2ehlp\x22.*MsgBox\s+(\x22[^\x22]*\x22|[^,]*)\s*,\s*[0-9]*\s*,\s*(\x22[^\x22]*\x22|[^,]*)\s*,\s*(?P=var)).*$/s
+at most polynomial, degree 8, witness: " ❲="\\\\.hlp"❳^n MsgBox\n ❲\n❳^n ❲\n❳^n , ❲\n❳^n , ❲\n❳^n ❲\n❳^n ," ❲"❳^n, time: 25 ms
+
+/^.*?(?:var\s*(?P<obj>\w)\s*=\s*document\.createElement\x28.*?\x29\x3b\s*?(?P=obj)\.(?P<elem>\w)\s*?.*?(?P=obj)\.attributes\s*\x3b\s*?.*?(?P=obj)\.(?P=elem)\s*?.*?\s*null\s*\x3b\s*?.*?(?P=obj)\.(?P=elem)).*$/s
+at most polynomial, degree 8, witness: d ❲vard=document.createElement(❳^n );d.d ❲\n❳^n d.attributes; ❲\n❳^n d.d\n ❲\n❳^n ❲\n❳^n null; ❲\n❳^n ❲d.dd❳^n, time: 80 ms
+
+/^.*?(?:<\s*meta\s+.*?(http-equiv=(?P<q1>[\x22\x27])\s*X-UA-Compatible\s*(?P=q1).*?[^>]content=(?P<q2>[\x22\x27])\s*IE=\s*(EmulateIE9|Edge|9)\s*(?P=q2)|content=(?P<q3>[\x22\x27])\s*IE=\s*(EmulateIE9|Edge|9)\s*(?P=q3).*?[^>]http-equiv=(?P<q4>[\x22\x27])\s*X-UA-Compatible\s*(?P=q4)).*?(\w\x2epostMessage\x28\s*.*?\x5c0.*?\x29|var\s+(?P<var>\w+)\s*=\s*(?P<q5>[\x22\x27]).*?[^\x3b]\x5c0.*?\x3b.*?\w\x2epostMessage\x28\s*(?P=var))).*$/s
+at most polynomial, degree 8, witness: <meta\n ❲\n❳^n ) ❲content="IE=9"z❳^n ❲zhttp-equiv="X-UA-Compatible"z❳^n ❲var\tz="❳^n ❲z\\0❳^n ❲;❳^n z.postMessage(z ❲z❳^n, time: 3981 ms
+
+/^.*?(?:var ([^\s]+) = ''\x3Bvar ([^,]+), ([^,]+).*\1 = \1 \+ String\.fromCharCode\(\2\).*\!= 64\) \{ \1 = \1 \+ String\.fromCharCode\(\3\)\x3b\}.*\x3breturn unescape\(\1\)\x3b\}return 0\x3b\}).*$/s
+at most polynomial, degree 8, witness: + ❲0;}var␣}␣=␣'';var␣+❳^n 0;},␣+ ❲turn␣0;}❳^n turn␣0;} ❲n❳^n ␣=␣n␣+␣String.fromCharCode(h ❲;}return␣0;})❳^n ;}return␣0; ❲}!=␣64)␣{␣}␣=␣}␣+␣String.fromCharCode(;❳^n } ❲;}return␣0;});}❳^n ;} ❲return␣0;};return␣unescape(n);}return␣0;}❳^n return␣0;}, time: 585 ms
+
+/^.*?(?:\d+(.)\d+\1\d+\1\d+\1\d+\1\d+\1).*$/s
+at most polynomial, degree 8, witness: 4 ❲4❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n, time: 4 ms
+

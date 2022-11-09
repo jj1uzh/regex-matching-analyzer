@@ -1,0 +1,6 @@
+/^.*?(?:<input[^>]*?type[/s]*=[/s]*(['|"]?)text\1[^>]*?value[/s]*=[/s]*(['|"])(.*?)\2[^>]*?>).*$/s
+at most polynomial, degree 5, witness: < ❲<input❳^n ❲type=text<❳^n ❲value="❳^n ❲"<❳^n, time: 90 ms
+
+/^.*?(?:(\[([^/].*?)(=(.+?))?\](.*?)\[/\2\]|\[([^/].*?)(=(.+?))?\])).*$/s
+at most polynomial, degree 5, witness: [[ ❲=/❳^n ❲]❳^n ❲[/▮❳^n ❲]❳^n ]], time: 42 ms
+

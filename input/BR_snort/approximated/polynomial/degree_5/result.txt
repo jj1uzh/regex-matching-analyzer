@@ -1,0 +1,195 @@
+/^.*?(?:<property[^>]*?value\s*=\s*(?P<q1>\x22|\x27).*? -classpath.*?(?P=q1)).*$/s
+at most polynomial, degree 5, witness: < ❲<property❳^n ❲value="❳^n ❲␣-classpath❳^n ❲"<❳^n, time: 357 ms
+
+/^.*?(?:var\s*(?P<imagebrush>\w+?)\x3b.*?(?P=imagebrush)\s*\x3d\s*[^\x3b\x2e]+\x2efindName\x28.*?(?P=imagebrush)\x2eImageSource\s*\x3d\s*[\x22\x21][^\x2e\x22\x21]+?[\x22\x21]).*$/s
+at most polynomial, degree 5, witness: W ❲ImageSource=!varf;❳^n ImageSource=!S! ❲Y❳^n = ❲\f❳^n .findName( ❲f❳^n x!, time: 722 ms
+
+/^.*?(?:var\s*?\w+?\s*\x3D\s*new\s*GeckoActiveXObject[^\x7B]*?catch\s*\x28(?P<exceptionname>\w+?)\x29.*?var\s*?(?P<errormessage>\w+?)\s*\x3D\s*(?P=exceptionname)\x2EtoString\x28\x29.[^\x7B]*?(?P=errormessage)\x2Ematch\x28.*?COM).*$/s
+at most polynomial, degree 5, witness: z ❲OMvarz❳^n OM=newGeckoActiveXObject ❲catch(F)❳^n F ❲MvarO❳^n M=F.toString()M ❲OM.match(❳^n OM, time: 596 ms
+
+/^.*?(?:classid\s*=\s*(?P<q59>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*C5702CCC-9B79-11D3-B654-00C04F79498E\s*}?\s*(?P=q59)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n C5702CCC-9B79-11D3-B654-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 20 ms
+
+/^.*?(?:classid\s*=\s*(?P<q37>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*9E77AAC4-35E5-42A1-BDC2-8F3FF399847C\s*}?\s*(?P=q37)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 9E77AAC4-35E5-42A1-BDC2-8F3FF399847C ❲\n❳^n ❲\n❳^n, time: 19 ms
+
+/^.*?(?:classid\s*=\s*(?P<q49>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*AD8E510D-217F-409B-8076-29C5E73B98E8\s*}?\s*(?P=q49)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n AD8E510D-217F-409B-8076-29C5E73B98E8 ❲\n❳^n ❲\n❳^n, time: 23 ms
+
+/^.*?(?:classid\s*=\s*(?P<q57>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*C531D9FD-9685-4028-8B68-6E1232079F1E\s*}?\s*(?P=q57)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n C531D9FD-9685-4028-8B68-6E1232079F1E ❲\n❳^n ❲\n❳^n, time: 23 ms
+
+/^.*?(?:classid\s*=\s*(?P<q31>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*8A674B4C-1F63-11D3-B64C-00C04F79498E\s*}?\s*(?P=q31)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 8A674B4C-1F63-11D3-B64C-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 21 ms
+
+/^.*?(?:classid\s*=\s*(?P<q43>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*A2E30750-6C3D-11D3-B653-00C04F79498E\s*}?\s*(?P=q43)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n A2E30750-6C3D-11D3-B653-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 25 ms
+
+/^.*?(?:classid\s*=\s*(?P<q61>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*C5702CCD-9B79-11D3-B654-00C04F79498E\s*}?\s*(?P=q61)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n C5702CCD-9B79-11D3-B654-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 33 ms
+
+/^.*?(?:classid\s*=\s*(?P<q29>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*8872FF1B-98FA-4D7A-8D93-C9F1055F85BB\s*}?\s*(?P=q29)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 8872FF1B-98FA-4D7A-8D93-C9F1055F85BB ❲\n❳^n ❲\n❳^n, time: 30 ms
+
+/^.*?(?:classid\s*=\s*(?P<q45>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*0369B4E5-45B6-11D3-B650-00C04F79498E\s*}?\s*(?P=q45)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 0369B4E5-45B6-11D3-B650-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 25 ms
+
+/^.*?(?:classid\s*=\s*(?P<q15>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*418008F3-CF67-4668-9628-10DC52BE1D08\s*}?\s*(?P=q15)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 418008F3-CF67-4668-9628-10DC52BE1D08 ❲\n❳^n ❲\n❳^n, time: 26 ms
+
+/^.*?(?:classid\s*=\s*(?P<q3>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*1DF7D126-4050-47F0-A7CF-4C4CA9241333\s*}?\s*(?P=q3)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 1DF7D126-4050-47F0-A7CF-4C4CA9241333 ❲\n❳^n ❲\n❳^n, time: 24 ms
+
+/^.*?(?:classid\s*=\s*(?P<q27>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*823535A0-0318-11D3-9D8E-00C04F72D980\s*}?\s*(?P=q27)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 823535A0-0318-11D3-9D8E-00C04F72D980 ❲\n❳^n ❲\n❳^n, time: 25 ms
+
+/^.*?(?:classid\s*=\s*(?P<q87>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*1BE49F30-0E1B-11D3-9D8E-00C04F72D980\s*}?\s*(?P=q87)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 1BE49F30-0E1B-11D3-9D8E-00C04F72D980 ❲\n❳^n ❲\n❳^n, time: 25 ms
+
+/^.*?(?:classid\s*=\s*(?P<q69>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*C5702CD0-9B79-11D3-B654-00C04F79498E\s*}?\s*(?P=q69)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n C5702CD0-9B79-11D3-B654-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 25 ms
+
+/^.*?(?:classid\s*=\s*(?P<q39>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*A1A2B1C4-0E3A-11D3-9D8E-00C04F72D980\s*}?\s*(?P=q39)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n A1A2B1C4-0E3A-11D3-9D8E-00C04F72D980 ❲\n❳^n ❲\n❳^n, time: 24 ms
+
+/^.*?(?:classid\s*=\s*(?P<q17>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*4A5869CF-929D-4040-AE03-FCAFC5B9CD42\s*}?\s*(?P=q17)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 4A5869CF-929D-4040-AE03-FCAFC5B9CD42 ❲\n❳^n ❲\n❳^n, time: 23 ms
+
+/^.*?(?:classid\s*=\s*(?P<q41>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*A2E3074E-6C3D-11D3-B653-00C04F79498E\s*}?\s*(?P=q41)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n A2E3074E-6C3D-11D3-B653-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 26 ms
+
+/^.*?(?:classid\s*=\s*(?P<q81>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*055CB2D7-2969-45CD-914B-76890722F112\s*}?\s*(?P=q81)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 055CB2D7-2969-45CD-914B-76890722F112 ❲\n❳^n ❲\n❳^n, time: 23 ms
+
+/^.*?(?:classid\s*=\s*(?P<q65>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*C5702CCF-9B79-11D3-B654-00C04F79498E\s*}?\s*(?P=q65)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n C5702CCF-9B79-11D3-B654-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 21 ms
+
+/^.*?(?:classid\s*=\s*(?P<q79>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*FA7C375B-66A7-4280-879D-FD459C84BB02\s*}?\s*(?P=q79)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n FA7C375B-66A7-4280-879D-FD459C84BB02 ❲\n❳^n ❲\n❳^n, time: 20 ms
+
+/^.*?(?:classid\s*=\s*(?P<q67>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*0369B4E6-45B6-11D3-B650-00C04F79498E\s*}?\s*(?P=q67)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 0369B4E6-45B6-11D3-B650-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 20 ms
+
+/^.*?(?:classid\s*=\s*(?P<q89>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*1C15D484-911D-11D2-B632-00C04F79498E\s*}?\s*(?P=q89)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 1C15D484-911D-11D2-B632-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 20 ms
+
+/^.*?(?:classid\s*=\s*(?P<q7>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*334125C0-77E5-11D3-B653-00C04F79498E\s*}?\s*(?P=q7)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 334125C0-77E5-11D3-B653-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 22 ms
+
+/^.*?(?:classid\s*=\s*(?P<q63>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*C5702CCE-9B79-11D3-B654-00C04F79498E\s*}?\s*(?P=q63)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n C5702CCE-9B79-11D3-B654-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 20 ms
+
+/^.*?(?:classid\s*=\s*(?P<q19>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*577FAA18-4518-445E-8F70-1473F8CF4BA4\s*}?\s*(?P=q19)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 577FAA18-4518-445E-8F70-1473F8CF4BA4 ❲\n❳^n ❲\n❳^n, time: 18 ms
+
+/^.*?(?:classid\s*=\s*(?P<q75>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*D02AAC50-027E-11D3-9D8E-00C04F72D980\s*}?\s*(?P=q75)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n D02AAC50-027E-11D3-9D8E-00C04F72D980 ❲\n❳^n ❲\n❳^n, time: 22 ms
+
+/^.*?(?:classid\s*=\s*(?P<q23>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*0149EEDF-D08F-4142-8D73-D23903D21E90\s*}?\s*(?P=q23)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 0149EEDF-D08F-4142-8D73-D23903D21E90 ❲\n❳^n ❲\n❳^n, time: 20 ms
+
+/^.*?(?:classid\s*=\s*(?P<q77>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*F9769A06-7ACA-4E39-9CFB-97BB35F0E77E\s*}?\s*(?P=q77)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n F9769A06-7ACA-4E39-9CFB-97BB35F0E77E ❲\n❳^n ❲\n❳^n, time: 18 ms
+
+/^.*?(?:classid\s*=\s*(?P<q35>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*9CD64701-BDF3-4D14-8E03-F12983D86664\s*}?\s*(?P=q35)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 9CD64701-BDF3-4D14-8E03-F12983D86664 ❲\n❳^n ❲\n❳^n, time: 20 ms
+
+/^.*?(?:classid\s*=\s*(?P<q21>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*59DC47A8-116C-11D3-9D8E-00C04F72D980\s*}?\s*(?P=q21)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 59DC47A8-116C-11D3-9D8E-00C04F72D980 ❲\n❳^n ❲\n❳^n, time: 20 ms
+
+/^.*?(?:classid\s*=\s*(?P<q13>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*37B03544-A4C8-11D2-B634-00C04F79498E\s*}?\s*(?P=q13)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 37B03544-A4C8-11D2-B634-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 21 ms
+
+/^.*?(?:classid\s*=\s*(?P<q73>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*CAAFDD83-CEFC-4E3D-BA03-175F17A24F91\s*}?\s*(?P=q73)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n CAAFDD83-CEFC-4E3D-BA03-175F17A24F91 ❲\n❳^n ❲\n❳^n, time: 21 ms
+
+/^.*?(?:classid\s*=\s*(?P<q5>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*2C63E4EB-4CEA-41B8-919C-E947EA19A77C\s*}?\s*(?P=q5)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 2C63E4EB-4CEA-41B8-919C-E947EA19A77C ❲\n❳^n ❲\n❳^n, time: 18 ms
+
+/^.*?(?:classid\s*=\s*(?P<q33>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*8A674B4D-1F63-11D3-B64C-00C04F79498E\s*}?\s*(?P=q33)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 8A674B4D-1F63-11D3-B64C-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 21 ms
+
+/^.*?(?:classid\s*=\s*(?P<q11>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*37B03543-A4C8-11D2-B634-00C04F79498E\s*}?\s*(?P=q11)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 37B03543-A4C8-11D2-B634-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 24 ms
+
+/^.*?(?:classid\s*=\s*(?P<q71>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*C6B14B32-76AA-4A86-A7AC-5C79AAF58DA7\s*}?\s*(?P=q71)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n C6B14B32-76AA-4A86-A7AC-5C79AAF58DA7 ❲\n❳^n ❲\n❳^n, time: 20 ms
+
+/^.*?(?:classid\s*=\s*(?P<q55>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*BB530C63-D9DF-4B49-9439-63453962E598\s*}?\s*(?P=q55)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n BB530C63-D9DF-4B49-9439-63453962E598 ❲\n❳^n ❲\n❳^n, time: 19 ms
+
+/^.*?(?:classid\s*=\s*(?P<q1>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*011B3619-FE63-4814-8A84-15A194CE9CE3\s*}?\s*(?P=q1)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 011B3619-FE63-4814-8A84-15A194CE9CE3 ❲\n❳^n ❲\n❳^n, time: 20 ms
+
+/^.*?(?:classid\s*=\s*(?P<q25>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*7F9CB14D-48E4-43B6-9346-1AEBC39C64D3\s*}?\s*(?P=q25)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 7F9CB14D-48E4-43B6-9346-1AEBC39C64D3 ❲\n❳^n ❲\n❳^n, time: 18 ms
+
+/^.*?(?:classid\s*=\s*(?P<q9>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*37B0353C-A4C8-11D2-B634-00C04F79498E\s*}?\s*(?P=q9)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n 37B0353C-A4C8-11D2-B634-00C04F79498E ❲\n❳^n ❲\n❳^n, time: 19 ms
+
+/^.*?(?:classid\s*=\s*(?P<q47>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*A8DCF3D5-0780-4EF4-8A83-2CFFAACB8ACE\s*}?\s*(?P=q47)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n A8DCF3D5-0780-4EF4-8A83-2CFFAACB8ACE ❲\n❳^n ❲\n❳^n, time: 19 ms
+
+/^.*?(?:classid\s*=\s*(?P<q53>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*B64016F3-C9A2-4066-96F0-BD9563314726\s*}?\s*(?P=q53)).*$/s
+at most polynomial, degree 5, witness: classid= ❲\n❳^n clsid: ❲\n❳^n B64016F3-C9A2-4066-96F0-BD9563314726 ❲\n❳^n ❲\n❳^n, time: 19 ms
+
+/^.*?(?:(\w+)\s*?\x3D\s*?document\x2Ecreateelement.*?\1\x2EsetAttribute.*?BD96C556-65A3-11D0-983A-00C04FC29E36.*?\1\x2EcreateObject\x28[\x22\x27]Shell\x2EApplication).*$/s
+at most polynomial, degree 5, witness: e ❲ateObject("Shell.Application=document.createelement❳^n ateObjec ❲t("Shell.Application.setAttribute❳^n t("Shell.Applic ❲ationBD96C556-65A3-11D0-983A-00C04FC29E36❳^n ation ❲ct("Shell.Application.createObject("Shell.Application❳^n ct('Shell.Application, time: 2525 ms
+
+/^.*?(?:function\s+(?P<func>[a-z\x5F]+).+?\x7B[^\x7D]+?document\x2Ewrite[^\x7D]+?setInterval\x28(?P=func)).*$/s
+at most polynomial, degree 5, witness: function\nd ❲d❳^n ❲{d❳^n ❲document.writed❳^n setInterval(d ❲d❳^n, time: 21 ms
+
+/^.*?(?:document\x2E(.*?)\x2EMovie\s*\x3D.*document\x2E\1\x2EreadyState\s*\x21?\x3D+\s*4).*$/s
+at most polynomial, degree 5, witness: t ❲ate=4document.❳^n ate=4 ❲readyState=4.Movie=❳^n readyState ❲=4document.❳^n =4 ❲ate=4.readyState=4❳^n ate=4, time: 123 ms
+
+/^.*?(?:(\S+)\s+\x3d[^\x3b]*\x2e(createElement|getElementById)\x28.*\1\x2ecomponentFromPoint\x28).*$/s
+at most polynomial, degree 5, witness: ( ❲omPoint(❳^n omPoint(␣= ❲omponentFromPoint(.createElement(❳^n ompo ❲nentFromPoint(❳^n nentFrom ❲Point(.componentFromPoint(❳^n Point(, time: 253 ms
+
+/^.*?(?:(?P<cl>\w+)\s*=\s*(?P<o>\w+)\.cloneNode.*?(?P=o)\.clearAttributes.*?(?P=o)\s*=\s*null\s*\x3B.*?(?P=cl)\.click\s*\x3B).*$/s
+at most polynomial, degree 5, witness: c ❲lick;S=S.cloneNode❳^n lick; ❲S.clearAttributes❳^n d ❲ick;S=null;❳^n ick; ❲S❳^n, time: 221 ms
+
+/^.*?(?:document.getElementById\x28\x22(?P<dfnelement>\w+?)\x22\x29\x2einsertAdjacentElement.*document.getElementById\x28\x22\w+?\x22\x29.getBoundingClientRect\x28\x29.*?document.getElementById\x28\x22\w+?\x22\x29.insertRow\x28\x29.*?\x3cdfn id\x3d\x22(?P=dfnelement)\x22\x3e).*$/s
+at most polynomial, degree 5, witness: F ❲>document>getElementById("d").insertAdjacentElement❳^n > ❲document>getElementById("d")>getBoundingClientRect()❳^n ❲document>getElementById("d")>insertRow()❳^n ❲<dfn␣id="d">❳^n, time: 256 ms
+
+/^.*?(?:(?P<element>\w*?)\s*\x3D\s*document\x2EgetElementByID.*?(?P<element2>\w*?)\s*\x3D\s*(?P=element).*?(?P=element2)\x2Eparentnode\x2Eremovechild\x28(?P=element2)\x29).*$/s
+at most polynomial, degree 5, witness: d ❲=document.getElementByID❳^n ❲d❳^n =d ❲d❳^n ❲.parentnode.removechild()❳^n, time: 70 ms
+
+/^.*?(?:var\s*(?P<v1>\w+).*?var\s*(?P<v2>\w+)\s*=\s*(?P=v1)\.cloneNode.*?\.focus\s*\x28\s*(?P=v2)\s*\x29.*?style\.position\s*=\s*[\x27\x22\s]+).*$/s
+at most polynomial, degree 5, witness: ' ❲varZ❳^n ❲Z❳^n S ❲ition='varZ=Z.cloneNode❳^n iti ❲on='.focus(Z)❳^n on=\n, time: 1758 ms
+
+/^.*?(?:(\w+)\s*\x3D\s*document\x2EcreateElement.*(\w+)\s*\x3D\s*document\x2EcreateElement.*\1\x2EappendChild\x28\2\x29.*appendChild\x28\1\x29).*$/s
+at most polynomial, degree 5, witness: d ❲d❳^n =document.createElement ❲d=document.createElement❳^n ❲d.appendChild(d)❳^n ❲appendChild(d)❳^n, time: 94 ms
+
+/^.*?(?:=\s*(?P<q1>(\x22|\x27|))\s*(?P<m1>\w+)\s*(?P=q1).*?<script.*?(?P=m1)\x2einnerHTML\s*=\s*(\x22|\x27){2}).*$/s
+at most polynomial, degree 5, witness: = ❲\n❳^n S␣ ❲␣❳^n =" ❲"<script❳^n " ❲nerHTML=""R.innerHTML=""❳^n nerHTML='', time: 304 ms
+
+/^.*?(?:var\s*(?P<iframename>\w+?)\s*\x3D\s*document\x2Egetelementsbytagname\x28[\x22\x27]iframe[\x22\x27]\x29.*?(?P=iframename).{0,5}\x2Eonreadystatechange\s*\x3D\s*(?P<functionname>\w+?).*?function\s*(?P=functionname)\x28\x29\x7B[^\x7D]*document\x2Ewrite).*$/s
+at most polynomial, degree 5, witness: 5 ❲nt.writevare=document.getelementsbytagname("iframe")❳^n nt.w ❲rite❳^n rite.onreadystatechange=L ❲L❳^n document.write ❲functiong❳^n, time: 2413 ms
+
+/^.*?(?:<[A-Z_]+\s*\x3A\s*ANIMATEMOTION[^>]+?id=(?P<q>\x22|\x27|)(?P<n>[A-Z][A-Z\d\x2D\x2E\x3A\x5F]*)(?P=q).*?(?P=n)\.).*$/s
+at most polynomial, degree 5, witness: < ❲<L:ANIMATEMOTION<❳^n id=L ❲L❳^n ❲L❳^n ❲.❳^n, time: 28 ms
+
+/^.*?(?:var\s*(?P<firstDOM>\w+?)\s*\x3D\s*document\x2EcreateElement.*?(?P<secondDOM>\w+?)\s*\x3D\s*document\x2EcreateElement\x28\x27(?P<reference>\w+?)\x27\x29.*?(?P=firstDOM)\x2EappendChild\x28(?P=secondDOM)\x29.*?(?P=secondDOM)\x2E(?P=reference)\s*?\x3D\s*?(?P=firstDOM)\x2Eattributes).*$/s
+at most polynomial, degree 5, witness: s ❲tributesvarz=document.createElement❳^n ❲tributes=document.createElement('z')❳^n tri ❲butes.appendChild(z)❳^n butes ❲z❳^n, time: 1112 ms
+
+/^.*?(?:(\S+)\x2EappendChild[^\x7D]+\1\x2EinnerHTML\s*\x3D\s*\x27{2}).*$/s
+at most polynomial, degree 5, witness: ' ❲TML=''❳^n TML= ❲''.appendChild=❳^n ' ❲'p❳^n ' ❲TML=''.innerHTML=''❳^n TML='', time: 89 ms
+
+/^.*?(?:(?P<obj>[A-Z\d_]+)\.innerHTML\s*=\s*(\x22[^\x22]*<[A-Z]+\s+[^>]*onreadystatechange\s*=|\x27[^\x27]*<[A-Z]+\s+[^>]*onreadystatechange\s*=).*?(?P=obj)\.innerHTML\s*=\s*(\x22\x22|\x27\x27)).*$/s
+at most polynomial, degree 5, witness: " ❲W❳^n .innerHTML='<L\t ❲\t❳^n ='' ❲onreadystatechange=❳^n S ❲ML=''W.innerHTML=''❳^n ML='', time: 656 ms
+
+/^.*?(?:javascript.+?function\s+(\w+)\s*\(\w*\)\s*\{.+?location=[^}]+\1\(.+?\}).*$/s
+at most polynomial, degree 5, witness: d ❲javascriptd❳^n ❲function\nd(){d❳^n ❲location=d❳^n ❲d(d❳^n, time: 95 ms
+
+/^.*?(?:var\s*([^\s]+)\s*=\s*unescape\s*\x28.*\x2ewrite\s*\x28\s*\1).*$/s
+at most polynomial, degree 5, witness: c ❲varc❳^n ❲=unescape(❳^n ❲.write(c❳^n ❲c❳^n, time: 7 ms
+
+/^.*?(?:(?P<var>\S+)\s*\x3D\s*eval\x28\s*(\x22|\x27|)Components\x2Einterfaces\x2E.*?\x2EQueryInterface\x28\s*(?P=var)\s*\x29.*?(location|navigator)).*$/s
+at most polynomial, degree 5, witness: r ❲tor❳^n tor ❲ocation=eval(Components.interfaces.❳^n ocation' ❲avigator.QueryInterface(r❳^n avigator ❲)❳^n, time: 597 ms
+
+/^.*?(?:(?P<obj>\w+)\.watch\((?P<q1>\x22|\x27|)(?P<prop>[A-Z0-9\x2d\x5f]+)(?P=q1).*(?P=obj)\.__defineSetter__\((?P<q2>\x22|\x27|)(?P=prop)(?P=q2)).*$/s
+at most polynomial, degree 5, witness: d ❲d❳^n .watch(L ❲L❳^n ❲d❳^n .__defineSetter__(L ❲L❳^n, time: 35 ms
+
+/^.*?(?:\x3C[^\x3E]*id\s*\x3D\s*[\x22\x27]\s*(\w*)\s*[\x22\x27].*?var\s*(\w*)\s*\x3D\s*document\.getElementbyId\s*\x28\s*[\x22\x27]\1[\x22\x27]\s*\x29.*?\2\.init\.valueof\.(call|apply)).*$/s
+at most polynomial, degree 5, witness: \f ❲l<❳^n lid=' ❲␣❳^n 'var ❲␣❳^n =document.getElementbyId('') ❲call❳^n call, time: 1079 ms
+

@@ -1,0 +1,9 @@
+/^.*?(?:(<object\s*[^>]*\s*id\s*=\s*(?P<m1>\x22|\x27|)(?P<id1>.+?)(?P=m1)(\s|>|\x2F)[^>]*\s*classid\s*=\s*(?P<q1>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*53cf415e-1a80-11d3-8e63-00a0c99ce543\s*}?\s*(?P=q1)(\s|>|\x2F).*(?P=id1)\s*\.\s*(Save\(\x22.*(\x3a\x5c|\x2e\x2e).*\x22.*\))|<object\s*[^>]*\s*classid\s*=\s*(?P<q2>\x22|\x27|)\s*clsid\s*\x3a\s*{?\s*53cf415e-1a80-11d3-8e63-00a0c99ce543\s*}?\s*(?P=q2)(\s|>|\x2F)[^>]*\s*id\s*=\s*(?P<m2>\x22|\x27|)(?P<id2>.+?)(?P=m2)(\s|>|\x2F).*(?P=id2)\.(Save\(\x22.*(\x3a\x5c|\x2e\x2e).*\x22.*\)))).*$/s
+at most polynomial, degree 14, witness: <object ❲\n❳^n :\\") ❲\r❳^n classid= ❲\r❳^n clsid: ❲\r❳^n 53cf415e-1a80-11d3-8e63-00a0c99ce543 ❲\r❳^n ❲\r❳^n ❲\r❳^n id= ❲\r❳^n ❲>❳^n ❲>❳^n ❲.Save("❳^n ❲:\\❳^n ❲"❳^n, time: 1078 ms
+
+/^.*?(?:\d+?(.)\d+\1\d+\1\d+\1\d+\1\d+\1\d+\1\d+\1\d+\1\d+\1\d+\1\d+\1\d+).*$/s
+at most polynomial, degree 14, witness: 4 ❲4❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n ❲44❳^n, time: 9 ms
+
+/^.*?(?:\w+\.getElementById\(.*?\)\.attachEvent\(\s*(?P<q1>[\x22\x27]?)(?P<eventid>.*?)(?P=q1)\s*,\s*(?P<repro>\w+)\s*\)\;.*?var\s+(?P<target>\w+)\s*=\s*\w+\.getElementById\(.*?\)\;.*?(?P=target)\.fireEvent\(\s*(?P<q2>[\x22\x27]?)(?P=eventid)(?P=q2)\s*\)\;.*?(?P=target)\.fireEvent\(\s*(?P<q3>[\x22\x27]?)(?P=eventid)(?P=q3)\s*\)\;.*?function\s+(?P=repro)\s*\(\s*(?P<arg>\w+)\s*\)\s*{.*?(?P=arg)\.srcElement\.parentNode\.removeChild\(\s*(?P=arg)\.srcElement\s*\)\;.*?}).*$/s
+at most polynomial, degree 14, witness: , ❲f❳^n .getElementById().attachEvent( ❲␣❳^n ❲,f);❳^n ❲var␣f=f.getElementById(❳^n ❲);❳^n ❲f❳^n .fireEvent( ❲␣❳^n ❲␣❳^n ); ❲f❳^n .fireEvent( ❲␣❳^n ❲);❳^n ❲function␣f(f){❳^n ❲f❳^n, time: 1852 ms
+

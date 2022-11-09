@@ -86,16 +86,6 @@ object Tree {
     }
   }
 
-  def leavesOfTree[A](m: Tree[A]): Seq[A] = {
-    m match {
-      case Leaf(a) => Seq(a)
-      case Success | Fail => Seq.empty
-      case Or(l,r) => leavesOfTree(l) ++ leavesOfTree(r)
-      case Lft(l) => leavesOfTree(l)
-      case _ => Seq.empty
-    }
-  }
-
   def isNonTrivial[A](m: Tree[A]): Boolean = {
     m match {
       case Leaf(a) => false

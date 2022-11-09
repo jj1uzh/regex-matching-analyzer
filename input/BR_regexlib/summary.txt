@@ -1,0 +1,32 @@
+input file : /Users/kawamura/Research/regex-matching-analyzer/input/BR_regexlib.txt
+started at : 2022/10/25 11:53:24
+finished at: 2022/10/25 11:53:28
+
+--- settings ---------------------------
+style: PCRE
+timeout: 10s
+----------------------------------------
+
+--- result -----------------------------
+total       : 27
+
+constant    : 0
+linear      : 0
+polynomial  : 0
+exponential : 0
+
+approximated: 26
+  constant   : 5
+  linear     : 1
+  polynomial : 12
+                    degree 2: 3
+                    degree 3: 5
+                    degree 4: 1
+                    degree 5: 2
+                    degree 6: 1
+  exponential: 8
+
+timeout     : 0
+skipped     : 1
+error       : 0
+----------------------------------------

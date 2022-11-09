@@ -1,0 +1,9 @@
+/^(?:(?P<p1>\w+)=(?P<v1>\w+)\&((?P=p1)=(?P=v1)\&){15}).*$/s
+at most linear, time: 3227 ms
+
+/^(?:\s*\x3d\s*([\x22\x27])\s*yes\s*\1).*$/s
+at most linear, time: 3 ms
+
+/^(?:USER\s(\S+)\s\1\s\1\s\x3A).*$/s
+at most linear, time: 4 ms
+

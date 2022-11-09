@@ -40,7 +40,7 @@ class DetNoAssertTreeTransducer[Q,A](
       val morphs:Map[A,Map[Option[Q],Seq[Option[Q]]]] = sigma.map{ a =>
         Analysis.checkInterrupted("transducer -> DT0L")
         a -> (states.map( q =>{
-          val t = leavesOfTree(deltaDet((q,Some(a)))).map(Option(_))
+          val t = flat(deltaDet((q,Some(a)))).map(Option(_))
           if(isNonTrivial(deltaDet((q,Some(a))))) (Option(q) -> (t:+None)) 
           else (Option(q) -> t)
         }
@@ -105,7 +105,7 @@ def toTotal():DetNoAssertTreeTransducer[(Q,Set[Q]),A] = {
         previousStates = reachStates
         for(states <- checkStates;a <- td.sigma){
           if(states.forall(q => td.deltaDet.get((q,Some(a))) != None)){
-            reachStates ++= Set(states.flatMap(q => leavesOfTree(td.deltaDet((q,Some(a)))).toSet))
+            reachStates ++= Set(states.flatMap(q => flat(td.deltaDet((q,Some(a)))).toSet))
           }
         }
       }
@@ -120,7 +120,7 @@ def toTotal():DetNoAssertTreeTransducer[(Q,Set[Q]),A] = {
           Analysis.checkInterrupted("preparing for calculate growth rate")
           if(setq.forall(q => td.deltaDet.get((q,Some(a))) != None)){
           //状態の集合に対しtdの遷移が存在する場合 遷移先の状態を全て集めてそこに飛ばす
-            val destination = setq.flatMap(q => leavesOfTree(td.deltaDet((q,Some(a)))).toSet)
+            val destination = setq.flatMap(q => flat(td.deltaDet((q,Some(a)))).toSet)
             newdelta += ((setq,a) -> destination)
           }
       }

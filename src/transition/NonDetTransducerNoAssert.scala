@@ -80,9 +80,9 @@ class NonDetNoAssertTreeTransducer[Q,A](
     for(q <- this.states;a <- this.sigma){
         Analysis.checkInterrupted("preparing for calculate growth rate")
         if(this.delta.get((q,Some(a))) != None){
-          //f_q ->^a t[f_1...f_n]
+          //false_q ->^a t[f_1...f_n]
             newdelta += (((false,Some(q)),Some(a)) -> this.delta((q,Some(a))).flatMap(t => Set(maketreeF(t))))
-          //a_q ->^a t[f_1,f_2,...a_i]
+          //true_q ->^a t[f_1,f_2,...a_i]
             newdelta += (((true,Some(q)),Some(a)) -> this.delta((q,Some(a))).flatMap(maketreeAF(_)))
         }
     }
@@ -96,11 +96,13 @@ class NonDetNoAssertTreeTransducer[Q,A](
       Analysis.checkInterrupted("preparing for calculate growth rate")
         if(this.delta.get((q,None)) != None){
           //q \in F => a_q -> (q ->^$)  t(contains success)
-          if(!this.delta((q,None)).filter(hasSuccess(_)).isEmpty)
-          newdelta += (((true,Some(q)),None) -> this.delta((q,None)).filter(hasSuccess(_)).map(_>>= {case _ => Fail}))
+          val destination_true = this.delta((q,None)).filter(hasSuccess(_))
+          if(!destination_true.isEmpty)
+          newdelta += (((true,Some(q)),None) -> destination_true.map(_>>= {case _ => Fail}))
           //q \not\in F=> f_q -> (q ->^$ ->) t(fail only)
-          if(!this.delta((q,None)).filterNot(hasSuccess(_)).isEmpty)
-          newdelta += (((false,Some(q)),None) -> this.delta((q,None)).filterNot(hasSuccess(_)).map(_>>= {case _ => Fail}))
+          val destination_false = this.delta((q,None)).filterNot(hasSuccess(_))
+          if(!destination_false.isEmpty)
+          newdelta += (((false,Some(q)),None) -> destination_false.map(_>>= {case _ => Fail}))
           
         }
     }
@@ -194,7 +196,6 @@ class NonDetNoAssertTreeTransducer[Q,A](
   
 
   def calcGrowthRate() : (Option[Int], Witness[A]) = {
-    //q_pを追加する
     val nfa_sigma:Set[Option[A]]= this.sigma.map(a => Some(a)) ++ Set(None)
 
     def forward() = {
@@ -219,7 +220,7 @@ class NonDetNoAssertTreeTransducer[Q,A](
                     this.delta.get((q,a)) match {
                       case None => Set()
                       case Some(ts) => ts.flatMap{ case t =>
-                        val qs2 = leavesOfTree(t).toSet
+                        val qs2 = flat(t).toSet
                         new_states.map(_ ++ qs2)
                       }
                     }
@@ -273,7 +274,7 @@ class NonDetNoAssertTreeTransducer[Q,A](
                     this.delta.get((q,Some(a))) match {
                       case None => Set()
                       case Some(ts) => ts.flatMap{ case t =>
-                        val qs2 = leavesOfTree(t)
+                        val qs2 = flat(t)
                         dT0L_trans.map{ case (m, dst_qs) =>
                           (m + (q -> qs2), dst_qs ++ qs2.toSet)
                         }
@@ -329,7 +330,7 @@ class NonDetNoAssertTreeTransducer[Q,A](
               var new_dt0l_destination:Set[Map[Q,Seq[Q]]] = Set()
               if(this.delta.get((q,Some(a))) != None){
                 for(arrivetree <- this.delta((q,Some(a)))){
-                  val stateseq = leavesOfTree(arrivetree)
+                  val stateseq = flat(arrivetree)
                   new_dt0l_destination ++= dt0l_destination.map(f => f + (q -> stateseq))
                 }
 
@@ -351,7 +352,6 @@ class NonDetNoAssertTreeTransducer[Q,A](
               
               if(indexedDT0L.get((statesSet,arrival)) != None) dt0l_Morphs = indexedDT0L((statesSet,arrival)).morphs
 
-              //変更部分を適用 全体的にもっといい書き方ありそう
               if(statesSet.forall(q => this.delta((q,Some(a))) != Set())){
                 nfa_delta ++= Seq((statesSet,Some(a),arrival))
                 if(!nfa_states.contains(arrival)){
@@ -390,12 +390,10 @@ class NonDetNoAssertTreeTransducer[Q,A](
       var reachStates:Set[Set[Q]] = Set(Set())
       while(previousStates != reachStates){
         previousStates = reachStates
-        for(q <- nfa_states diff reachStates){
           for(delta <- nfa_delta){
             delta match{
               case (qprime,a,q) => {
                 if(reachStates.contains(q)) reachStates ++= Set(qprime)
-              }
             }
           }
         }
@@ -483,14 +481,14 @@ class NonDetNoAssertTreeTransducer[Q,A](
 
     val (growthRate, witness, _) = dt0l.calcGrowthRate(Set((initialState,Set(initialState))))
 
-    //witness.separators :+= Seq()
+  
     //witnessの最初のNoneを消す
-    if(!witness.separators.isEmpty) witness.separators = Seq(witness.separators.head.tail) ++ witness.separators.tail
-    
-    
+    if(!witness.separators.isEmpty) {
+      witness.separators = Seq(witness.separators.head.tail) ++ witness.separators.tail
+      witness.separators :+= Seq() 
+    }
     val adjusted_separators = witness.separators.map{case lst => lst.map{case (a,i,q,q_prime) => a}}
     val adjusted_pumps = witness.pumps.map{case lst => lst.map{case (a,i,q,q_prime) => a}}
-
     (growthRate.map(_+1), new Witness(adjusted_separators,adjusted_pumps))
   }
 

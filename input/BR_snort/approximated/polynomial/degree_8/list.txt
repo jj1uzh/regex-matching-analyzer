@@ -1,0 +1,6 @@
+/^.*?(?:create view\s*[^\s]*\s*as select\s+([^\x2e]+)\x2e.*\1\x2E.*from sys\x2E[^\s]*\s*\1\x2C\s*sys\x2E[^\s]*\s*([^\s]+)\s*where\s*\1\x2e[^\s\x3D]+\s*\x3D\s*\2\x2E).*$/s
+/^.*?(?:(^|\s)(?P<var>[^\s]+)\s*=\s*\x22\x5c\x5c[^\x22]*\x2ehlp\x22.*MsgBox\s+(\x22[^\x22]*\x22|[^,]*)\s*,\s*[0-9]*\s*,\s*(\x22[^\x22]*\x22|[^,]*)\s*,\s*(?P=var)).*$/s
+/^.*?(?:var\s*(?P<obj>\w)\s*=\s*document\.createElement\x28.*?\x29\x3b\s*?(?P=obj)\.(?P<elem>\w)\s*?.*?(?P=obj)\.attributes\s*\x3b\s*?.*?(?P=obj)\.(?P=elem)\s*?.*?\s*null\s*\x3b\s*?.*?(?P=obj)\.(?P=elem)).*$/s
+/^.*?(?:<\s*meta\s+.*?(http-equiv=(?P<q1>[\x22\x27])\s*X-UA-Compatible\s*(?P=q1).*?[^>]content=(?P<q2>[\x22\x27])\s*IE=\s*(EmulateIE9|Edge|9)\s*(?P=q2)|content=(?P<q3>[\x22\x27])\s*IE=\s*(EmulateIE9|Edge|9)\s*(?P=q3).*?[^>]http-equiv=(?P<q4>[\x22\x27])\s*X-UA-Compatible\s*(?P=q4)).*?(\w\x2epostMessage\x28\s*.*?\x5c0.*?\x29|var\s+(?P<var>\w+)\s*=\s*(?P<q5>[\x22\x27]).*?[^\x3b]\x5c0.*?\x3b.*?\w\x2epostMessage\x28\s*(?P=var))).*$/s
+/^.*?(?:var ([^\s]+) = ''\x3Bvar ([^,]+), ([^,]+).*\1 = \1 \+ String\.fromCharCode\(\2\).*\!= 64\) \{ \1 = \1 \+ String\.fromCharCode\(\3\)\x3b\}.*\x3breturn unescape\(\1\)\x3b\}return 0\x3b\}).*$/s
+/^.*?(?:\d+(.)\d+\1\d+\1\d+\1\d+\1\d+\1).*$/s

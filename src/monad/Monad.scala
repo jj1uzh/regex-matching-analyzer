@@ -6,7 +6,7 @@ trait Monad[M[_]] {
   def success[A]: M[A]
   def fail[A]: M[A]
   def concat[A](m1: M[A], m2: M[A]): M[A]
-  def union[A](m1: M[A], m2: M[A]): M[A]//unionExpを扱うために暫定的に追加,MonadPlusをさらに拡張する必要がある？
+  def union[A](m1: M[A], m2: M[A]): M[A]
   final def apply[A](a: A) = unit(a)
 }
 

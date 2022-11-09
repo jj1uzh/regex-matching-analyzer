@@ -5,7 +5,7 @@ import AMonad._
 import RegExp._
 import Monad._
 import StateT._
-
+import RegExpSetLftDeriver._
 //SetTree ver.
 class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m: Monad[StateTBooleanSetTree] with StateOperatablenoAssert[StateTBooleanSetTree,Boolean]){
   def derive[A](r: RegExp[A], a: Option[A]): StateTBooleanSetTree[Option[RegExp[A]]] = {
@@ -120,11 +120,16 @@ class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m:
 
       case EnumExp(r) => {
         //⊥を左に置くことにより，backreferenceにマッチ文字列分の時間がかかることをモデル化
-        //Lftを微分ごとにくっつける 要見直し
-        m.union((m.fail ++ StateTSetTreeMonad.leaves[Option[RegExp[A]]](derive(r,a))) >>= {
-          case None => StateTSetTreeMonad.lft(m(None))
+        val lft_deriver = new RegExpSetLftDeriver
+        lft_deriver.derive(r,a) >>= {
+          case None => m(None)
           case Some(r) => StateTSetTreeMonad.lft(m(Some(EnumExp(r))))
-        },m.fail)
+        }
+        /*
+        StateTSetTreeMonad.leaves[Option[RegExp[A]]](derive(r,a))>>= {
+          case None => m(None)
+          case Some(r) => StateTSetTreeMonad.lft(m(Some(EnumExp(r))))
+        }*/
 
       }
       case UnionExp(r1,r2) => {
@@ -181,7 +186,7 @@ class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m:
       */
 
       case EnumExp(r) => {
-        m.union(StateTSetTreeMonad.leaves(deriveEOL(r)) >>= {_ => m(())},m.fail)
+        StateTSetTreeMonad.leaves(deriveEOL(r)) >>= {_ => m(())}
       }
       case UnionExp(r1,r2) => {
         m.union(deriveEOL(r1),deriveEOL(r2))

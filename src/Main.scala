@@ -14,7 +14,7 @@ import java.text.DateFormat
 object Main {
   class Settings() {
     var style: RegExpStyle = Raw
-    var method: Option[BacktrackMethod] = Some(BDM)
+    var method: Option[BacktrackMethod] = Some(KM)
     var timeout: Option[Int] = Some(10)
 
     override def toString(): String = {

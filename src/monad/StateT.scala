@@ -65,15 +65,17 @@ object StateT {
 
     def leaves[A](m: StateTBooleanSetTree[A]): StateTBooleanSetTree[A]
       = s => SetMonad.bind(m(s),pickLeaf)
-
     
     def putLft[A](t: Tree[A]): SetTree[A]
-      = t match{
+      = Set(Lft(t))
+        /*t match{
+
           case Leaf(a) => Set(Lft(Leaf(a)))
           case _ => Set.empty
-        }
+        }*/
     def lft[A](m: StateTBooleanSetTree[A]): StateTBooleanSetTree[A]
       = s => SetMonad.bind(m(s),putLft)
 
   }
+
 }
