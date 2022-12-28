@@ -31,17 +31,28 @@ class RegExpDeriverSpec extends FlatSpec with Matchers {
     applyLeaves(aster.derive('a')) should be (Set(Or(Leaf(None, true),Leaf(Some(aster), false))))
     applyLeaves(aster.derive('b')) should be (Set(Or(Leaf((None,true)),Fail)))
   }
-  "derive Enum" should "derive a" in {
-    val aster = RegExpParser("a*")
-    val r = EnumExp(aster)
-    applyLeaves(r.derive('a')) should be (Set(Or(Fail,Leaf((Some((EnumExp(aster))),false))), Or(Fail,Leaf((None,true)))))
-    applyLeaves(r.derive('b')) should be (Set(Or(Fail,Leaf((None,true)))))
+  "derive MTree a" should "derive a" in {
+    val a = RegExpParser("a")
+    val r = MTreeExp(a)
+    applyLeaves(r.derive('a')) should be (Set(Lft(Leaf((Some((MTreePrimeExp(EpsExp()))),false))),Fail))
+    applyLeaves(r.derive('b')) should be (Set(Fail))
   }
-  "derive Union" should "derive a" in {
+  "derive MTree ." should "derive a" in {
+    val dot = RegExpParser(".")
+    val r = MTreeExp(dot)
+    applyLeaves(r.derive('a')) should be (Set(Lft(Leaf((Some((MTreePrimeExp(EpsExp()))),false))),Fail))
+    applyLeaves(r.derive('b')) should be (Set(Lft(Leaf((Some((MTreePrimeExp(EpsExp()))),false))),Fail))
+  }
+  "derive MTree ø" should "derive a" in {
+    val r = MTreeExp(EmptyExp[Char])
+    applyLeaves(r.derive('a')) should be (Set(Fail))
+    applyLeaves(r.derive('b')) should be (Set(Fail))
+  }
+  "derive MTree aster" should "derive a" in {
     val aster = RegExpParser("a*")
-    val r = UnionExp(EnumExp(aster),RegExpParser("∅"))
-    applyLeaves(r.derive('a')) should be (Set(Or(Fail,Leaf((Some((EnumExp(aster))),false))), Or(Fail,Leaf((None,true))), Fail))
-    applyLeaves(r.derive('b')) should be (Set(Or(Fail,Leaf((None,true))),Fail))
+    val r = MTreeExp(aster)
+    applyLeaves(r.derive('a')) should be (Set(Lft(Leaf((Some((MTreePrimeExp(aster))),false))), Leaf((None,true)),Fail))
+    applyLeaves(r.derive('b')) should be (Set(Fail,Leaf((None,true)),Fail))
   }
   it should "derive ." in {
     val r = RegExpParser(".")

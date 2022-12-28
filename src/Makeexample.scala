@@ -46,7 +46,7 @@ object MakeExample{
     val regExpStrs1 = IO.loadFile(filepath1).getLines.toSeq
     val regExpStrs2 = IO.loadFile(filepath2).getLines.toSeq
     val regExpStrs3 = IO.loadFile(filepath3).getLines.toSeq
-    /*
+    
     val output1 = new File(s"/Users/kawamura/Research/regex-matching-analyzer/input/BR_nakagawa.txt")
     for(regstr <- regExpStrs1){
       try{
@@ -59,7 +59,7 @@ object MakeExample{
         case e: Exception =>
       }
     }
-    */
+    
     
     val output2 = new File(s"/Users/kawamura/Research/regex-matching-analyzer/input/BR_regexlib.txt")
     for(regstr2 <- regExpStrs2){

@@ -35,7 +35,6 @@ object Tree {
       }
     }
     def success[A] = Success
-    def union[A](m1: Tree[A], m2: Tree[A]) = Or(m1,m2)
 
   }
 
@@ -57,7 +56,7 @@ object Tree {
     def success[A] = Set(Success)
     def fail[A] = Set(Fail)
     def concat[A](m1: SetTree[A], m2: SetTree[A]) = m1.flatMap(tree1 => m2.flatMap(tree2 => Set(Or(tree1,tree2))))
-    def union[A](m1: SetTree[A], m2: SetTree[A]) = m1 union m2
+
   }
 
   def flat[Q](m: Tree[Q]): Seq[Q] = {

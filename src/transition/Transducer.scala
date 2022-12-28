@@ -428,6 +428,7 @@ class DetTransducer[Q,A](
       case Lookahead => calcBtrGrowthRateLookahead()
       case SubsetPrune => ??? //calcBtrGrowthRateSubsetPrune()
       case Nondeterminism => ??? //calcBtrGrowthRateNondeterminism()
+      case _ => ???
     }
   }
 }

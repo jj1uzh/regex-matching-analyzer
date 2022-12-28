@@ -1,11 +1,9 @@
 import org.scalatest._
 
-import matching.regexp._
 import matching.monad._
 import matching.transition._
 
 class stringtotreeTest extends FlatSpec {
-  /*
   "toDeterministic " should "success" in {
 
   val states1 = Set(1,2,3)
@@ -49,33 +47,30 @@ class stringtotreeTest extends FlatSpec {
   assert(td2.deltaDet(((2,Set(2,3)),None)) == Success)
   assert(td2.deltaDet(((1,Set(1)),Some('a'))) == Or(Leaf((2,Set(2,3))),Leaf((3,Set(2,3)))))
   }
-  */
-  /*
   "Bprune" should "success" in {
 
     val states1 = Set(1,2,3)
-    val sigma1 = Set('a','b')
+    val sigma1 = Set(Some('a'),Some('b'),None)
     val initialState = 1
 
-    var transition = Map[(Int,Option[Char]),Set[Tree[Int]]]()
-    transition += ((1,Some('a')) -> Set(Or(Leaf(1),Leaf(2)),Leaf(3)))
+    var transition = Map[(Int,Option[Option[Char]]),Set[Tree[Int]]]()
+    transition += ((1,Some(Some('a'))) -> Set(Or(Leaf(1),Leaf(2)),Leaf(3)))
 
 
     transition += ((1,None) -> Set(Success,Or(Success,Fail)))
     transition += ((3,None) -> Set(Fail,Or(Success,Fail)))
 
 
-    val td1 = new NonDetNoAssertTreeTransducer(states1,sigma1,initialState,transition)
+    val td1 = new NonDetNoAssertTreeTransducer[Int,Option[Char]](states1,sigma1,initialState,transition)
 
     val td2 = td1.Bprune()
     assert(td2.delta(((true,None),Some(None))) == Set(Leaf((true,Some(1))),Leaf((false,Some(1)))))
-    assert(td2.delta.get(((true,None),None)) == None)
     assert(td2.delta(((true,Some(1)),Some(Some('a')))) == Set(Lft(Leaf((true,Some(1)))),Or(Leaf((false,Some(1))),Leaf((true,Some(2)))), Leaf((true,Some(3)))))
     assert(td2.delta(((true,Some(1)),None)) == Set(Or(Success,Fail),Success))
     assert(td2.delta(((false,Some(3)),None)) == Set(Fail))
 
   }
-  */
+  
 
   
 

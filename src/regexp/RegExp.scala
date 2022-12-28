@@ -101,8 +101,9 @@ case class BoundaryExp() extends RegExp[Char]
 
 case class FailEpsExp[A]() extends RegExp[A]
 
-case class EnumExp[A](r: RegExp[A]) extends RegExp[A]
-case class UnionExp[A](r1: RegExp[A],r2: RegExp[A]) extends RegExp[A]
+case class MTreeExp[A](r: RegExp[A]) extends RegExp[A]
+
+case class MTreePrimeExp[A](r: RegExp[A]) extends RegExp[A]
 
 object RegExp {
   case class InvalidRegExpException(message: String) extends Exception(message: String)
@@ -189,8 +190,7 @@ object RegExp {
       case IfExp(cond,rt,rf) => s"(?(${cond})${rt}|${rf})"
       case FailEpsExp() => "\u25C7"
 
-      case EnumExp(r) => s"(○${r})"
-      case UnionExp(r1,r2) => s"(${r1}U${r2})"
+      case MTreeExp(r) => s"(○${r})"
     }
   }
 
@@ -348,7 +348,7 @@ object RegExp {
             /*
             ConcatExp(replace(removeAssert(groupMap(n))), FailEpsExp())
             */
-            UnionExp(EnumExp(replace(groupMap(n))),EmptyExp[A])
+            MTreeExp(replace(groupMap(n)))
           case _ => recursiveApply(r,replace)
         }
       }
@@ -444,6 +444,7 @@ object RegExp {
         })(u)
         delta += (s,Some(a)) -> t
         for(tree <- t){
+          Analysis.checkInterrupted("regular expression -> transducer")
           val newExps = flat(tree).filterNot(states.contains)
           states |= newExps.toSet
           stack.pushAll(newExps)
@@ -455,7 +456,7 @@ object RegExp {
     new NonDetNoAssertTreeTransducer(states, sigma, initialState, delta).Bprune()
   }
 
-  type typeOfTD1 = Either[Option[Char],(Boolean, Option[(matching.regexp.RegExp[Char], Boolean)])]
+  type typeOfTD1 = Either[Option[Char],Int]
 
   type typeOfTD2 = Option[Char]
   
@@ -472,7 +473,6 @@ object RegExp {
         e match{
           case None => Seq(charForNone)
           case Some(c) => Seq(c)
-          //case None => Seq.empty//ダミーの文字
           case _ => Seq.empty
         }
         
@@ -495,16 +495,15 @@ object RegExp {
     val (rm, approximated) = modifyRegExp(r)
 
     val transducer2 = Debug.time("regular expression -> transducer") {
-      constructTransducer(rm, options)
-    }//.rename()
+      constructTransducer(rm, options).rename()
+    }
     
 
     method match {
       case Some(BDM) => 
         val transducer = Debug.time("regular expression -> transducer") {
-          //最初はこちらを用いて計算
           transducer2.toDeterministic().toTotal()
-        }//.rename()
+        }.rename()
     
         val (growthRate, witness) = transducer.calcGrowthRate()
         (growthRate, convertWitness1(witness), approximated, transducer.delta.size)

@@ -6,7 +6,6 @@ trait Monad[M[_]] {
   def success[A]: M[A]
   def fail[A]: M[A]
   def concat[A](m1: M[A], m2: M[A]): M[A]
-  def union[A](m1: M[A], m2: M[A]): M[A]
   final def apply[A](a: A) = unit(a)
 }
 
@@ -22,7 +21,6 @@ object Monad {
     def fail[A] = Nil
     def concat[A](m1: List[A], m2: List[A]) = m1 ++ m2
     def success[A] = Nil
-    def union[A](m1: List[A], m2: List[A]) = m1 ++ m2
   }
 
   implicit object SetMonad extends Monad[Set] {
@@ -32,6 +30,5 @@ object Monad {
     def concat[A](m1: Set[A], m2: Set[A]) = m1 ++ m2
 
     def success[A] = Set()
-    def union[A](m1: Set[A], m2: Set[A]) = m1 ++ m2
   }
 }

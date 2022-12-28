@@ -7,10 +7,10 @@ import Monad._
 import StateT._
 
 //SetLft ver.
-class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(implicit m: Monad[StateTBooleanSetTree] with StateOperatablenoAssert[StateTBooleanSetTree,Boolean]){
+class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(m: Monad[StateTBooleanSetTree] with StateOperatablenoAssert[StateTBooleanSetTree,Boolean]){
   def derive[A](r: RegExp[A], a: Option[A]): StateTBooleanSetTree[Option[RegExp[A]]] = {
     def consume(r: RegExp[Char], a: Option[Char]): StateTBooleanSetTree[Option[RegExp[Char]]] = {
-      var mayfail=false//backreferenceで失敗する可能性がある
+      var mayfail=false//backreferenceで失敗する可能性がある場合true
       def accept(a: Option[Char]): Boolean = {
         def acceptCharClass(r: CharClassElem, a: Option[Char]): Boolean = {
           r match {
@@ -70,14 +70,14 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(implicit m: 
         }
       }
       if (accept(a)) {
-        if(mayfail) m.union(m.fail,m.update(_ => false) >>= (_ => m(Some(EpsExp()))))
+        if(mayfail) m.concat(m.fail,m.update(_ => false) >>= (_ => m(Some(EpsExp()))))
         else m.update(_ => false) >>= (_ => m(Some(EpsExp()))) 
       }else m.fail
     }
 
     r match {
       case ElemExp(_) | DotExp() | CharClassExp(_,_) | MetaCharExp(_) => consume(r,a)
-      case EmptyExp() => (_ => Set())//怪しい
+      case EmptyExp() => (_ => Set())
       case EpsExp() => m(None)
       case ConcatExp(r1,r2) =>
         derive(r1,a) >>= {
@@ -85,16 +85,16 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(implicit m: 
           case None => derive(r2,a)
         }
       case AltExp(r1,r2) =>
-        m.union(derive(r1,a),derive(r2,a))
+        m.concat(derive(r1,a),derive(r2,a))
       case StarExp(r1,greedy) =>
         val rd: StateTBooleanSetTree[Option[RegExp[A]]] = derive(r1,a) >>= {
           case Some(r2) => m(Some(optConcatExp(r2,r)))
           case None => m(None)
         }
         if (greedy ^ options.ungreedy) {
-          m.union(rd,m(None))
+          m.concat(rd,m(None))
         } else {
-          m.union((m(None): StateTBooleanSetTree[Option[RegExp[A]]]),rd)
+          m.concat((m(None): StateTBooleanSetTree[Option[RegExp[A]]]),rd)
         }
       case PlusExp(r,greedy) =>
         val rStar = StarExp(r,greedy)
@@ -105,9 +105,9 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(implicit m: 
       case OptionExp(r,greedy) =>
         val dr = derive(r,a)
         if (greedy ^ options.ungreedy) {
-          m.union(dr,m(None))
+          m.concat(dr,m(None))
         } else {
-          m.union((m(None): StateTBooleanSetTree[Option[RegExp[A]]]),dr)
+          m.concat((m(None): StateTBooleanSetTree[Option[RegExp[A]]]),dr)
         }
       case RepeatExp(r,min,max,greedy) =>
         val rDec = RepeatExp(r,min.map(_-1),max.map(_-1),greedy)
@@ -118,9 +118,9 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(implicit m: 
         if (min.isDefined) {
           rd
         } else if (greedy ^ options.ungreedy) {
-          m.union(rd,m(None))
+          m.concat(rd,m(None))
         } else {
-          m.union((m(None): StateTBooleanSetTree[Option[RegExp[A]]]),rd)
+          m.concat((m(None): StateTBooleanSetTree[Option[RegExp[A]]]),rd)
         }
       case StartAnchorExp() => m.update(identity) >>= (b => if (b) m(None) else m.fail)
       case EndAnchorExp() => m.fail
@@ -140,16 +140,17 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(implicit m: 
 
   def deriveEOL[A](r: RegExp[A]): StateTBooleanSetTree[Unit] = {
     r match {
-      case ElemExp(_) | EmptyExp() | DotExp() | CharClassExp(_,_) | MetaCharExp(_) => m.fail
+      case EmptyExp() => (_ => Set())
+      case ElemExp(_) | DotExp() | CharClassExp(_,_) | MetaCharExp(_) => m.fail
       case EpsExp() => m(())
       case ConcatExp(r1,r2) => deriveEOL(r1) >>= (_ => deriveEOL(r2))
-      case AltExp(r1,r2) => m.union(deriveEOL(r1),deriveEOL(r2))
+      case AltExp(r1,r2) => m.concat(deriveEOL(r1),deriveEOL(r2))
       case StarExp(r,greedy) =>
         val rd = deriveEOL(r)
         if (greedy ^ options.ungreedy) {
-          m.union(rd,m(()))
+          m.concat(rd,m(()))
         } else {
-          m.union(m(()),rd)
+          m.concat(m(()),rd)
         }
       case PlusExp(r,greedy) =>
         val rStar = StarExp(r,greedy)
@@ -157,9 +158,9 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(implicit m: 
       case OptionExp(r,greedy) =>
         val dr = deriveEOL(r)
         if (greedy ^ options.ungreedy) {
-          m.union(dr,m(()))
+          m.concat(dr,m(()))
         } else {
-          m.union(m(()),dr)
+          m.concat(m(()),dr)
         }
       case RepeatExp(r,min,max,greedy) =>
         val rDec = RepeatExp(r,min.map(_-1),max.map(_-1),greedy)
@@ -167,9 +168,9 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(implicit m: 
         if (min.isDefined) {
           rd
         } else if (greedy ^ options.ungreedy) {
-          m.union(rd,m(()))
+          m.concat(rd,m(()))
         } else {
-          m.union(m(()),rd)
+          m.concat(m(()),rd)
         }
       case StartAnchorExp() => m.update(identity) >>= (b => if (b) m(()) else m.fail)
       case EndAnchorExp() => m(())
@@ -182,13 +183,6 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(implicit m: 
       /*
       case FailEpsExp() => m.fail(m(()))
       */
-
-      case EnumExp(r) => {
-        StateTSetTreeMonad.leaves(deriveEOL(r)) >>= {_ => m(())}
-      }
-      case UnionExp(r1,r2) => {
-        m.union(deriveEOL(r1),deriveEOL(r2))
-      }
 
       case _ => throw new Exception(s"internal error.")
     }

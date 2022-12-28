@@ -81,7 +81,7 @@ class RegExpSpec extends FlatSpec with Matchers {
       List[RegExp[Char]](
         StartAnchorExp(),
         ElemExp('a'),
-        UnionExp(EnumExp(ElemExp('a')), EmptyExp())
+        MTreeExp(ElemExp('a'))
       ).reduceLeft(ConcatExp(_,_)))
       /*
     modifyRegExp(RegExpParser("""^(a)\1(?<hoge>b*)(?P=hoge)"""))._1 should be (
@@ -104,8 +104,8 @@ class RegExpSpec extends FlatSpec with Matchers {
       List[RegExp[Char]](
         StartAnchorExp(),
         ElemExp('a'),
-        ConcatExp(ElemExp('b'), UnionExp(EnumExp(ElemExp('a')), EmptyExp())),
-        UnionExp(EnumExp(ConcatExp(ElemExp('b'), UnionExp(EnumExp(ElemExp('a')), EmptyExp()))),EmptyExp())
+        ConcatExp(ElemExp('b'), MTreeExp(ElemExp('a'))),
+        MTreeExp(ConcatExp(ElemExp('b'),MTreeExp(ElemExp('a'))))
       ).reduceLeft(ConcatExp(_,_)))
 
   }

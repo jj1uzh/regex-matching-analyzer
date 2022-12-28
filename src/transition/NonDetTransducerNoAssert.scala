@@ -40,13 +40,15 @@ class NonDetNoAssertTreeTransducer[Q,A](
       def maketreeAF(t: Tree[Q]): SetTree[(Boolean,Option[Q])] = {
         t match{
           //どこかに必ずtrueが存在するとする
-          case Fail => Set(Fail)
+          case Fail => Set()
           case Success => Set(Success)
           case Leaf(a) => SetTreeMonad.unit((true,Some(a)))
           case Lft(t) => maketreeAF(t).flatMap(t => Set(Lft(t)))
           //左側にtrueがある場合(Lftをつける) ++ 右側にaがある場合
           case Or(t1,t2) =>  {
-            if(hasLeaf(t1)) SetTreeMonad.union(maketreeAF(t1).flatMap(t => Set(Lft(t))),SetTreeMonad.concat(Set(maketreeF(t1)),maketreeAF(t2)))
+            if(hasLeaf(t1)) {
+              maketreeAF(t1).flatMap(t => Set(Lft(t)):SetTree[(Boolean,Option[Q])]) union SetTreeMonad.concat(Set(maketreeF(t1)),maketreeAF(t2))
+            }
             else SetTreeMonad.concat(Set(maketreeF(t1)),maketreeAF(t2))
           }
         }
@@ -71,7 +73,6 @@ class NonDetNoAssertTreeTransducer[Q,A](
 
     var newdelta = Map[((Boolean,Option[Q]),Option[A]),SetTree[(Boolean,Option[Q])]]()
     //ダミー文字により正しい初期状態に飛ぶ
-    //witnessにSome(None)が増える
     val none = this.sigma.toList.reverse.head//None
     newdelta += (((true,None),Some(none)) -> Set(Leaf((true,Some(this.initialState))),Leaf((false,Some(this.initialState)))))
 
@@ -86,7 +87,6 @@ class NonDetNoAssertTreeTransducer[Q,A](
             newdelta += (((true,Some(q)),Some(a)) -> this.delta((q,Some(a))).flatMap(maketreeAF(_)))
         }
     }
-    //for(ele <- newdelta) println(ele)
 
 
     //$遷移を作る
@@ -399,7 +399,6 @@ class NonDetNoAssertTreeTransducer[Q,A](
         }
       }
       nfa_states = reachStates
-      print(nfa_states)
 
         
       indexedDT0L.filterKeys({case (p,pprime) => nfa_states.contains(p) && nfa_states.contains(pprime)})
@@ -408,7 +407,6 @@ class NonDetNoAssertTreeTransducer[Q,A](
 
 
     val dt0l= Debug.time("transducer -> DT0L") {
-
 //      val indexedDT0L = toDT0L()
       val indexedDT0L = toDT0LYM()
       //indexedDT0Lから一つのNonDetDT0Lへと変換
@@ -432,7 +430,6 @@ class NonDetNoAssertTreeTransducer[Q,A](
           }
         }
       }
-
 
 
       /*
@@ -459,24 +456,12 @@ class NonDetNoAssertTreeTransducer[Q,A](
         }
 
       }
-      /*
-      for(q <- morphs){
-        q match{
-          case (a,maps) => {
-            println(a)
-            for(map <- maps) println(map)
-          }
-        }
-      }
-      */
       */
 
 
         new PairDT0L(states,morphs)
       }
 
-    //println(dt0l.states.size)
-    //println(dt0l.morphs.size)
 
 
     val (growthRate, witness, _) = dt0l.calcGrowthRate(Set((initialState,Set(initialState))))

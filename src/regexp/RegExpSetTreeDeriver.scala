@@ -5,7 +5,7 @@ import AMonad._
 import RegExp._
 import Monad._
 import StateT._
-import RegExpSetLftDeriver._
+
 //SetTree ver.
 class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m: Monad[StateTBooleanSetTree] with StateOperatablenoAssert[StateTBooleanSetTree,Boolean]){
   def derive[A](r: RegExp[A], a: Option[A]): StateTBooleanSetTree[Option[RegExp[A]]] = {
@@ -118,22 +118,21 @@ class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m:
       case FailEpsExp() => m.fail(m(None))
       */
 
-      case EnumExp(r) => {
-        //⊥を左に置くことにより，backreferenceにマッチ文字列分の時間がかかることをモデル化
-        val lft_deriver = new RegExpSetLftDeriver
+      case MTreeExp(r) => {
+        val lft_deriver = new RegExpSetLftDeriver()(StateTSetMTreeMonad)
+        StateTSetMTreeMonad.concat(lft_deriver.derive(r,a) >>= {
+          case None => m(None)
+          case Some(r) => StateTSetMTreeMonad.lft(m(Some(MTreePrimeExp(r))))
+        }
+        ,StateTSetMTreeMonad.fail)
+      }
+
+      case MTreePrimeExp(r) => {
+        val lft_deriver = new RegExpSetLftDeriver()(StateTSetMTreeMonad)
         lft_deriver.derive(r,a) >>= {
           case None => m(None)
-          case Some(r) => StateTSetTreeMonad.lft(m(Some(EnumExp(r))))
+          case Some(r) => StateTSetMTreeMonad.lft(m(Some(MTreePrimeExp(r))))
         }
-        /*
-        StateTSetTreeMonad.leaves[Option[RegExp[A]]](derive(r,a))>>= {
-          case None => m(None)
-          case Some(r) => StateTSetTreeMonad.lft(m(Some(EnumExp(r))))
-        }*/
-
-      }
-      case UnionExp(r1,r2) => {
-        m.union(derive(r1,a),derive(r2,a))
       }
 
       case _ => throw new Exception(s"internal error.")
@@ -185,11 +184,16 @@ class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m:
       case FailEpsExp() => m.fail(m(()))
       */
 
-      case EnumExp(r) => {
-        StateTSetTreeMonad.leaves(deriveEOL(r)) >>= {_ => m(())}
+      case MTreeExp(r) => {
+        val lft_deriver = new RegExpSetLftDeriver()(StateTSetMTreeMonad)
+        StateTSetMTreeMonad.concat(
+          lft_deriver.deriveEOL(r) >>= {_ => m(())}
+        ,StateTSetMTreeMonad.fail)
       }
-      case UnionExp(r1,r2) => {
-        m.union(deriveEOL(r1),deriveEOL(r2))
+
+      case MTreePrimeExp(r) => {
+        val lft_deriver = new RegExpSetLftDeriver()(StateTSetMTreeMonad)
+        lft_deriver.deriveEOL(r) >>= {_ => m(())}
       }
 
       case _ => throw new Exception(s"internal error.")
