@@ -72,11 +72,6 @@ object StateT {
 
     def update[A](f: Boolean => Boolean)
       = s => SetTreeMonad.unit((s,f(s)))
-    
-    def putLft[A](t: Tree[A]): SetTree[A]
-      = Set(Lft(t))
-    def lft[A](m: StateTBooleanSetTree[A]): StateTBooleanSetTree[A]
-      = s => SetMonad.bind(m(s),putLft)
 
   }
 

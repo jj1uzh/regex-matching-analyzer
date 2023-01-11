@@ -122,7 +122,7 @@ class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m:
         val lft_deriver = new RegExpSetLftDeriver()(StateTSetMTreeMonad)
         StateTSetMTreeMonad.concat(lft_deriver.derive(r,a) >>= {
           case None => m(None)
-          case Some(r) => StateTSetMTreeMonad.lft(m(Some(MTreePrimeExp(r))))
+          case Some(r) => m(Some(MTreePrimeExp(r)))
         }
         ,StateTSetMTreeMonad.fail)
       }
@@ -131,7 +131,7 @@ class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m:
         val lft_deriver = new RegExpSetLftDeriver()(StateTSetMTreeMonad)
         lft_deriver.derive(r,a) >>= {
           case None => m(None)
-          case Some(r) => StateTSetMTreeMonad.lft(m(Some(MTreePrimeExp(r))))
+          case Some(r) => m(Some(MTreePrimeExp(r)))
         }
       }
 

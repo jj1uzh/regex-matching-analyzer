@@ -70,8 +70,8 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(m: Monad[Sta
         }
       }
       if (accept(a)) {
-        if(mayfail) m.concat(m.fail,m.update(_ => false) >>= (_ => m(Some(EpsExp()))))
-        else m.update(_ => false) >>= (_ => m(Some(EpsExp()))) 
+        if(mayfail) m.concat(m.fail,m.update(_ => false) >>= (_ => StateTSetMTreeMonad.lft(m(Some(EpsExp())))))
+        else m.update(_ => false) >>= (_ => StateTSetMTreeMonad.lft(m(Some(EpsExp()))))
       }else m.fail
     }
 
