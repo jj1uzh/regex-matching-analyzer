@@ -39,6 +39,28 @@ object Tree {
   }
 
   type SetTree[A] = Set[Tree[A]]
+
+  object SetMTreeMonad extends Monad[SetTree]{
+    //Set of Monadic Tree
+    def unit[A](a: A) = Set(Leaf(a))
+    def bind[A,B](a: SetTree[A], f:A => SetTree[B]): SetTree[B] = {
+      def bind0(t: Tree[A], f:A => SetTree[B]): SetTree[B] = {
+        t match{
+          case Leaf(a) => f(a)
+          case Success => Set(Success)
+          case Fail => Set(Fail)
+          case Lft(l) => bind0(l,f).flatMap(t => Set(Lft(t)))
+          case Or(t1,t2) => SetTreeMonad.concat(bind0(t1,f),bind0(t2,f))
+        }
+      }
+      a.flatMap(t => bind0(t,f))
+    }
+    def success[A] = Set(Success)
+    def fail[A] = Set(Fail)
+    def concat[A](m1: SetTree[A], m2: SetTree[A]) = m1 union m2//different from SetTree
+
+  }
+
   implicit object SetTreeMonad extends Monad[SetTree]{
     def unit[A](a: A) = Set(Leaf(a))
     def bind[A,B](a: SetTree[A], f:A => SetTree[B]): SetTree[B] = {

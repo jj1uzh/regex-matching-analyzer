@@ -178,7 +178,7 @@ class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m:
       case LookaheadExp(r,positive) =>
         val rd = deriveEOL(r)
         if (positive) m.assert(rd, m(())) else m.assertNot(rd, m(()))
-        */
+      */
       case LookbehindExp(r,positive) => ???
       /*
       case FailEpsExp() => m.fail(m(()))

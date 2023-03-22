@@ -42,22 +42,19 @@ object StateT {
   }
 
   object StateTSetMTreeMonad extends Monad[StateTBooleanSetTree] with StateOperatablenoAssert[StateTBooleanSetTree,Boolean]{
-    def unit[A](a: A) = s => SetTreeMonad((a,s))
+    def unit[A](a: A) = s => SetMTreeMonad((a,s))
     def bind[A,B](m: StateTBooleanSetTree[A], f: A => StateTBooleanSetTree[B])
-      = s => SetTreeMonad.bind[(A,Boolean),(B,Boolean)](m(s),{case (a,s) => f(a)(s)})
-    def fail[A] = _ => SetTreeMonad.fail
-    def success[A] = _ => SetTreeMonad.success
+      = s => SetMTreeMonad.bind[(A,Boolean),(B,Boolean)](m(s),{case (a,s) => f(a)(s)})
+    def fail[A] = _ => SetMTreeMonad.fail
+    def success[A] = _ => SetMTreeMonad.success
     def concat[A](m1: StateTBooleanSetTree[A], m2: StateTBooleanSetTree[A])
       = s => (m1(s) union m2(s))
 
 
     def update[A](f: Boolean => Boolean)
-      = s => SetTreeMonad.unit((s,f(s)))
-    
-    def putLft[A](t: Tree[A]): SetTree[A]
-      = Set(Lft(t))
+      = s => SetMTreeMonad.unit((s,f(s)))
     def lft[A](m: StateTBooleanSetTree[A]): StateTBooleanSetTree[A]
-      = s => SetMonad.bind(m(s),putLft)
+      = s => SetMTreeMonad.bind[(A,Boolean),(A,Boolean)](m(s),a => Set(Lft(Leaf(a))))
 
   }
 

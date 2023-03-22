@@ -128,7 +128,7 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(m: Monad[Sta
       case LookaheadExp(r,positive) =>
         val rd = derive(r,a)
         if (positive) m.assert(rd, m(None)) else m.assertNot(rd, m(None))
-        */
+      */
       case LookbehindExp(r,positive) => ???
       /*
       case FailEpsExp() => m.fail(m(None))

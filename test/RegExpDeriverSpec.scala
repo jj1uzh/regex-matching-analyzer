@@ -54,6 +54,29 @@ class RegExpDeriverSpec extends FlatSpec with Matchers {
     applyLeaves(r.derive('a')) should be (Set(Lft(Leaf((Some((MTreePrimeExp(aster))),false))), Leaf((None,true)),Fail))
     applyLeaves(r.derive('b')) should be (Set(Fail,Leaf((None,true)),Fail))
   }
+  "derive MTreePrime a" should "derive a" in {
+    val a = RegExpParser("a")
+    val r = MTreePrimeExp(a)
+    applyLeaves(r.derive('a')) should be (Set(Lft(Leaf((Some((MTreePrimeExp(EpsExp()))),false)))))
+    applyLeaves(r.derive('b')) should be (Set(Fail))
+  }
+  "derive MTreePrime ." should "derive a" in {
+    val dot = RegExpParser(".")
+    val r = MTreePrimeExp(dot)
+    applyLeaves(r.derive('a')) should be (Set(Lft(Leaf((Some((MTreePrimeExp(EpsExp()))),false))),Fail))
+    applyLeaves(r.derive('b')) should be (Set(Lft(Leaf((Some((MTreePrimeExp(EpsExp()))),false))),Fail))
+  }
+  "derive MTreePrime ø" should "derive a" in {
+    val r = MTreePrimeExp(EmptyExp[Char])
+    applyLeaves(r.derive('a')) should be (Set())
+    applyLeaves(r.derive('b')) should be (Set())
+  }
+  "derive MTreePrime aster" should "derive a" in {
+    val aster = RegExpParser("a*")
+    val r = MTreePrimeExp(aster)
+    applyLeaves(r.derive('a')) should be (Set(Lft(Leaf((Some((MTreePrimeExp(aster))),false))), Leaf((None,true))))
+    applyLeaves(r.derive('b')) should be (Set(Fail,Leaf((None,true))))
+  }
   it should "derive ." in {
     val r = RegExpParser(".")
     applyLeaves(r.derive('a')) should be (Set(Leaf(Some(EpsExp()), false)))

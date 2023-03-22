@@ -101,6 +101,7 @@ case class BoundaryExp() extends RegExp[Char]
 
 case class FailEpsExp[A]() extends RegExp[A]
 
+//for modify in backreference
 case class MTreeExp[A](r: RegExp[A]) extends RegExp[A]
 
 case class MTreePrimeExp[A](r: RegExp[A]) extends RegExp[A]
@@ -345,9 +346,7 @@ object RegExp {
             FailEpsExp()
           case BackReferenceExp(n,_) =>
             approximated = true
-            /*
-            ConcatExp(replace(removeAssert(groupMap(n))), FailEpsExp())
-            */
+            //ConcatExp(replace(removeAssert(groupMap(n))), FailEpsExp())
             MTreeExp(replace(groupMap(n)))
           case _ => recursiveApply(r,replace)
         }
@@ -456,20 +455,18 @@ object RegExp {
     new NonDetNoAssertTreeTransducer(states, sigma, initialState, delta).Bprune()
   }
 
-  type typeOfTD1 = Either[Option[Char],Int]
-
-  type typeOfTD2 = Option[Char]
+  type typeOfTD = Option[Char]
+  type typeOfTD2 = Either[Option[Char],Int]
   
-
   def calcTimeComplexity(
     r: RegExp[Char],
     options: PCREOptions,
     method: Option[BacktrackMethod]
   ): (Option[Int], Witness[Char], Boolean, Int) // (degree, witness, approximated?, size of transducer)
   = {
-    def convertWitness2(w: Witness[typeOfTD2]): Witness[Char] = {
+    def convertWitness_KM(w: Witness[typeOfTD]): Witness[Char] = {
       val charForNone = '\u25AE'
-      def convertNone(e: typeOfTD2): Seq[Char] = {
+      def convertNone(e: typeOfTD): Seq[Char] = {
         e match{
           case None => Seq(charForNone)
           case Some(c) => Seq(c)
@@ -479,9 +476,9 @@ object RegExp {
       }
       Witness(w.separators.map(_.flatMap(convertNone)), w.pumps.map(_.flatMap(convertNone)))
     }
-    def convertWitness1(w: Witness[typeOfTD1]): Witness[Char] = {
+    def convertWitness_BDM(w: Witness[typeOfTD2]): Witness[Char] = {
       val charForNone = '\u25AE'
-      def convertNone(e: typeOfTD1): Seq[Char] = {
+      def convertNone(e: typeOfTD2): Seq[Char] = {
         e match{
           case (Left(None)) => Seq(charForNone)
           case (Left(Some(c))) => Seq(c)
@@ -494,22 +491,26 @@ object RegExp {
 
     val (rm, approximated) = modifyRegExp(r)
 
-    val transducer2 = Debug.time("regular expression -> transducer") {
+    val transducer_KM = Debug.time("regular expression -> transducer") {
       constructTransducer(rm, options).rename()
     }
     
 
     method match {
-      case Some(BDM) => 
-        val transducer = Debug.time("regular expression -> transducer") {
-          transducer2.toDeterministic().toTotal()
-        }.rename()
-    
-        val (growthRate, witness) = transducer.calcGrowthRate()
-        (growthRate, convertWitness1(witness), approximated, transducer.delta.size)
+      //KM:Kawamura,Minamide
       case Some(KM) =>
-          val (growthRate2,witness2) = transducer2.calcGrowthRate()
-        (growthRate2, convertWitness2(witness2), approximated, transducer2.delta.size)
+        val (growthRate,witness) = transducer_KM.calcGrowthRate()
+        (growthRate, convertWitness_KM(witness), approximated, transducer_KM.delta.size)
+      //BDM:Berglund,Drewes,van der Merwe
+      case Some(BDM) => 
+        val transducer_BDM = Debug.time("regular expression -> transducer") {
+          transducer_KM.toDeterministic().toTotal().rename()
+        }
+    
+        val (growthRate, witness) = transducer_BDM.calcGrowthRate()
+
+        (growthRate, convertWitness_BDM(witness), approximated, transducer_BDM.delta.size)
+      case _ => throw new Exception(s"internal error.")
     }
 
   }
