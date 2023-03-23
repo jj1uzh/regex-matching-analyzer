@@ -9,19 +9,23 @@ case class Success(
   time: Long
 ) extends TestResult {
   override def toString(): String = {
-    var str = if (approximated) "at most " else ""
-    str += (growthRate match {
-      case Some(0) => "constant"
-      case Some(1) => "linear"
-      case Some(d) => s"polynomial, degree ${d}"
-      case None => s"exponential"
-    })
+    val order =
+      growthRate match {
+        case Some(0) => "constant"
+        case Some(1) => "linear"
+        case Some(d) => s"polynomial, degree ${d}"
+        case None    => s"exponential"
+      }
 
-    if (witness != Witness.empty) str += s", witness: ${witness}"
-
-    str += s", time: ${time} ms"
-
-    str
+    val b = new StringBuilder()
+    b += '{'
+    b ++= s"""\"order\": \"$order\", """
+    b ++= s"""\"approx\": $approximated, """
+    b ++= s"""\"witness\": ${if (witness.isEmpty) "null"
+    else witness.toString}, """
+    b ++= s"""\"time\": $time"""
+    b += '}'
+    b.result()
   }
 
   def getTime(): String = {

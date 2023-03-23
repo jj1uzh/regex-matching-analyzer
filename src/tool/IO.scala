@@ -32,7 +32,7 @@ object IO {
       case '\n' => "\\n"
       case '\r' => "\\r"
       case '\t' => "\\t"
-      case ' ' => "\u2423"
+      case '"'  => "\\\""
       case _ if a.toString.matches("""\p{C}""") =>
         s"\\x${a.toString.head.toHexString.padTo(2, "0").mkString}"
       case _ => a.toString
