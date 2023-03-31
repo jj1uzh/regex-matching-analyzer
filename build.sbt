@@ -1,8 +1,8 @@
 name := "regex-matching-analyzer"
 scalaVersion := "2.12.11"
 
-scalaSource in Compile := baseDirectory.value / "src"
-scalaSource in Test := baseDirectory.value / "test"
+Compile / scalaSource := baseDirectory.value / "src"
+Test / scalaSource := baseDirectory.value / "test"
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlint")
 scalacOptions ++= Seq("-language:higherKinds")
@@ -10,9 +10,11 @@ scalacOptions ++= Seq("-language:higherKinds")
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.1"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 
+Global / lintUnusedKeysOnLoad := false
+
 ThisBuild / useSuperShell := false
 shellPrompt := {_ => s"${scala.Console.MAGENTA}sbt:${name.value}> ${scala.Console.RESET}"}
 autoStartServer := false
-fork in run := true
-connectInput in run := true
-cancelable in Global := true
+run / fork := true
+run / connectInput := true
+Global / cancelable := true
