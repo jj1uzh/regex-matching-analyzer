@@ -27,7 +27,7 @@ object Main {
     }
   }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     def parseArgs(rawArgs: Array[String]): (Option[String], Settings) = {
       def parseOptions(options: List[String], setting: Settings = new Settings()): Settings = {
         options match {
@@ -101,7 +101,7 @@ object Main {
     }
   }
 
-  def interactiveTest(settings: Settings) {
+  def interactiveTest(settings: Settings): Unit = {
     var continue = true
     while (continue) {
       println("please input expression. (input blank line to quit)")
@@ -117,7 +117,7 @@ object Main {
     }
   }
 
-  def fileInputTest(inputFile: String, settings: Settings) {
+  def fileInputTest(inputFile: String, settings: Settings): Unit = {
     val regExpStrs = IO.loadFile(inputFile).getLines.toSeq
     val total = regExpStrs.length
 
@@ -162,7 +162,7 @@ object Main {
     val summaryCount = MTMap[(String, Option[Boolean]), Int]().withDefaultValue(0)
     val degreeCount = MTMap[(Int, Boolean), Int]().withDefaultValue(0)
 
-    def writeResult(regExpStr: String, result: TestResult) {
+    def writeResult(regExpStr: String, result: TestResult): Unit = {
       val resultStr = result match {
         case Success(d,_,_,_,_) => d match {
           case Some(0) => "constant"
@@ -223,7 +223,7 @@ object Main {
 
     val started = new Date().getTime()
 
-    def printProgress(idx: Int) {
+    def printProgress(idx: Int): Unit = {
       var expected: Date = null
       if (idx > 0) {
         val now = new Date().getTime()
