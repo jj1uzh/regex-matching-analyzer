@@ -13,6 +13,7 @@ import matching.transition._
 import java.text.DateFormat
 import java.util.Date
 import scala.collection.mutable.{Map => MTMap}
+import scala.io.Source
 import scala.io.StdIn
 
 object Main {
@@ -21,14 +22,12 @@ object Main {
     var method: Option[BacktrackMethod] = Some(KM)
     var timeout: Option[Int] = Some(10)
 
-    override def toString(): String = {
-      List(
-        s"${"-" * 3} settings ${"-" * 27}",
-        s"style: ${style}",
-        s"timeout: ${if (timeout.isDefined) s"${timeout.get}s" else "disabled"}",
-        s"${"-" * 40}"
-      ).mkString("\n")
-    }
+    override def toString(): String =
+      s"""--- settings ---------------------------
+         |style: $style
+         |timeout: ${if (timeout.isDefined) s"${timeout.get}s" else "disabled"}
+         |----------------------------------------
+         |""".stripMargin
   }
 
   def main(args: Array[String]): Unit = {
@@ -107,19 +106,12 @@ object Main {
   }
 
   def interactiveTest(settings: Settings): Unit = {
-    var continue = true
-    while (continue) {
-      println("please input expression. (input blank line to quit)")
-      val regExpStr = StdIn.readLine()
-      if (regExpStr.isEmpty) {
-        continue = false
-      } else {
-        println(regExpStr)
-        val result = test(regExpStr, settings)
-        println(result)
-        println()
-      }
-    }
+    println("please input expression. (input blank line to quit)")
+    Source.stdin
+      .getLines()
+      .takeWhile { _.nonEmpty }
+      .map { test(_, settings) }
+      .foreach { result => println(s"$result\n") }
   }
 
   def fileInputTest(inputFile: String, settings: Settings): Unit = {
