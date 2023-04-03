@@ -77,13 +77,17 @@ class RegExpParser() extends RegexParsers {
 
                 rep1(hyphen | charClassMeta | charClassElem) ^^ { ll =>
                   def parseCharClassElems(ss: List[Any]): List[CharClassElem] = {
-                    ss match {
+                    (ss: @unchecked) match {
                       case (c1: Char) +: () +: (c2: Char) +: rest =>
                         RangeExp(c1, c2) +: parseCharClassElems(rest)
-                      case (c: Char) +: rest        => SingleCharExp(c) :: parseCharClassElems(rest)
-                      case (m: MetaCharExp) +: rest => m :: parseCharClassElems(rest)
-                      case () +: rest => SingleCharExp('-') :: parseCharClassElems(rest)
-                      case Nil        => Nil
+                      case (c: Char) +: rest =>
+                        SingleCharExp(c) :: parseCharClassElems(rest)
+                      case (m: MetaCharExp) +: rest =>
+                        m :: parseCharClassElems(rest)
+                      case () +: rest =>
+                        SingleCharExp('-') :: parseCharClassElems(rest)
+                      case Nil =>
+                        Nil
                     }
                   }
 
@@ -171,7 +175,7 @@ class RegExpParser() extends RegexParsers {
     }
 
     try {
-      parseAll(exp, s) match {
+      (parseAll(exp, s): @unchecked) match {
         case Success(r, _) => r.toRegExp
         case NoSuccess(msg, next) =>
           throw RegExpParser.ParseException(s"${msg} at ${next.pos.line}:${next.pos.column}")

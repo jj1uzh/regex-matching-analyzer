@@ -82,7 +82,7 @@ class DT0L[A, Q](
         def checkEDA(sc: Set[Q]): Option[Pump] = {
           val labeledAdjSc = scPairLabeledAdj((sc, sc))
 
-          def constructG2(sc: Set[Q]): LabeledGraph[(Q, Q), A] = {
+          def constructG2(): LabeledGraph[(Q, Q), A] = {
             val e2 =
               for (
                 (a, es) <- labeledAdjSc.toSeq;
@@ -102,7 +102,7 @@ class DT0L[A, Q](
               val back = graph.getPath(q2, q1).get
               Some((q1, a +: back, q1))
             case None =>
-              val g2 = constructG2(sc)
+              val g2 = constructG2()
               g2.calcStrongComponents()
                 .find(
                   _.exists { case (q1, q2) => q1 == q2 }
@@ -312,7 +312,7 @@ class PairDT0L[A, R, P](
         def checkEDA(sc: Set[Q]): Option[Pump] = {
           val labeledAdjSc = scPairLabeledAdj((sc, sc))
 
-          def constructG2(sc: Set[Q]): LabeledGraph[((R, R), P), A] = {
+          def constructG2(): LabeledGraph[((R, R), P), A] = {
             val e2 =
               for (
                 (a, es) <- labeledAdjSc.toSeq;
@@ -333,14 +333,14 @@ class PairDT0L[A, R, P](
               val back = graph.getPath(q2, q1).get
               Some((q1, a +: back, q1))
             case None =>
-              val g2 = constructG2(sc)
+              val g2 = constructG2()
               g2.calcStrongComponents()
                 .find(sc =>
                   sc.exists { case ((r1, r2), _) => r1 == r2 } &&
                     sc.exists { case ((r1, r2), _) => r1 != r2 }
                 )
                 .map { case sc =>
-                  val q1 @ ((r1, r2), _) = sc.find { case ((r1, r2), _) => r1 != r2 }.get
+                  val q1 @ ((r1, _), _) = sc.find { case ((r1, r2), _) => r1 != r2 }.get
                   val q2 @ (_, p0) = sc.find { case ((r3, r4), _) => r3 == r1 && r4 == r1 }.get
                   val path1 = g2.getPath(q2, q1).get
                   val path2 = g2.getPath(q1, q2).get
@@ -484,8 +484,7 @@ class IndexedDT0L[A, Q, P](
     indexedMorphs: Map[(P, P), Map[A, Map[Q, Seq[Q]]]]
 ) {
   def calcGrowthRate(
-      initials: Set[(Q, P)],
-      lookaheadDFA: DFA[P, A]
+      initials: Set[(Q, P)]
   ): (Option[Int], Witness[A], Option[P]) = {
     def toPairDT0L(): PairDT0L[(A, P), Q, P] = {
       val statesDT0L = for (state <- states; index <- indices) yield (state, index)

@@ -473,6 +473,7 @@ class TransducerWithLA[Q, A, P](
         .groupBy { case (p1, _, p2) =>
           (p1, p2)
         }
+        .view
         .mapValues(_.map(_._2))
         .toMap
         .withDefaultValue(Seq())
@@ -498,8 +499,7 @@ class TransducerWithLA[Q, A, P](
     }
 
     val (growthRate, witness, last) = indexedDT0L.calcGrowthRate(
-      lookaheadDFA.states.map((initialState, _)),
-      lookaheadDFA
+      lookaheadDFA.states.map((initialState, _))
     )
 
     if (last.isDefined) {

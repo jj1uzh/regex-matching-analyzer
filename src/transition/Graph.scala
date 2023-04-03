@@ -24,6 +24,7 @@ class Graph[V](
       Analysis.checkInterrupted("calculate adjacency list")
       edge._1
     }
+    .view
     .mapValues { es =>
       Analysis.checkInterrupted("calculate adjacency list")
       es.map(_._2)
@@ -138,9 +139,11 @@ class LabeledGraph[V, A](
       Analysis.checkInterrupted("calculate labeled adjacency list")
       labeledEdge._1
     }
+    .view
     .mapValues { es =>
       Analysis.checkInterrupted("calculate labeled adjacency list")
       es.groupBy(_._2)
+        .view
         .mapValues(
           _.map(_._3)
         )
