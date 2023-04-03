@@ -11,29 +11,30 @@ object RegExpIR {
   def toString[A](r: RegExpIR[A]): String = {
     r match {
       case NumExpIR(s) => s"\\${s}"
-      case GroupExpIR(r, name) => name match {
-        case Some(name) => s"(?<${name}>${r})"
-        case None => s"(${r})"
-      }
-      case NamedBackReferenceExpIR(name) => s"\k<${name}>"
+      case GroupExpIR(r, name) =>
+        name match {
+          case Some(name) => s"(?<${name}>${r})"
+          case None       => s"(${r})"
+        }
+      case NamedBackReferenceExpIR(name) => s"\\k<${name}>"
     }
   }
 
   implicit class IRtoRegExp(r: RegExp[Char]) {
     def recursiveApply(r: RegExp[Char], f: RegExp[Char] => RegExp[Char]): RegExp[Char] = {
       r match {
-        case ConcatExp(r1,r2) => ConcatExp(f(r1),f(r2))
-        case AltExp(r1,r2) => AltExp(f(r1),f(r2))
-        case StarExp(r,greedy) => StarExp(f(r),greedy)
-        case PlusExp(r,greedy) => PlusExp(f(r),greedy)
-        case OptionExp(r,greedy) => OptionExp(f(r),greedy)
-        case RepeatExp(r,min,max,greedy) => RepeatExp(f(r),min,max,greedy)
-        case GroupExp(r,id,name) => GroupExp(f(r),id,name)
-        case LookaheadExp(r,positive) => LookaheadExp(f(r),positive)
-        case LookbehindExp(r,positive) => LookbehindExp(f(r),positive)
-        case IfExp(cond,rt,rf) => IfExp(f(cond),f(rt),f(rf))
-        case GroupExpIR(r,name) => GroupExpIR(f(r),name)
-        case _ => r
+        case ConcatExp(r1, r2)              => ConcatExp(f(r1), f(r2))
+        case AltExp(r1, r2)                 => AltExp(f(r1), f(r2))
+        case StarExp(r, greedy)             => StarExp(f(r), greedy)
+        case PlusExp(r, greedy)             => PlusExp(f(r), greedy)
+        case OptionExp(r, greedy)           => OptionExp(f(r), greedy)
+        case RepeatExp(r, min, max, greedy) => RepeatExp(f(r), min, max, greedy)
+        case GroupExp(r, id, name)          => GroupExp(f(r), id, name)
+        case LookaheadExp(r, positive)      => LookaheadExp(f(r), positive)
+        case LookbehindExp(r, positive)     => LookbehindExp(f(r), positive)
+        case IfExp(cond, rt, rf)            => IfExp(f(cond), f(rt), f(rf))
+        case GroupExpIR(r, name)            => GroupExpIR(f(r), name)
+        case _                              => r
       }
     }
 
@@ -43,7 +44,7 @@ object RegExpIR {
 
       def convertGroup(r: RegExp[Char]): RegExp[Char] = {
         r match {
-          case GroupExpIR(r,name) =>
+          case GroupExpIR(r, name) =>
             captureGroups += 1
             val id = captureGroups
             name match {
@@ -54,7 +55,7 @@ object RegExpIR {
               case None =>
             }
             GroupExp(convertGroup(r), id, name)
-          case _ => recursiveApply(r,convertGroup)
+          case _ => recursiveApply(r, convertGroup)
         }
       }
 
@@ -63,9 +64,9 @@ object RegExpIR {
           case NumExpIR(s) =>
             if (s.head == '0' || captureGroups.min(99).max(9) < s.toInt) {
               val (octalPart, elemsPart) = s.take(3).span(_ < '8')
-              (elemsPart + s.drop(3)).foldLeft(ElemExp(Integer.parseInt(s"0${octalPart}", 8).toChar): RegExp[Char])(
-                (r,c) => ConcatExp(r, ElemExp(c))
-              )
+              (elemsPart + s.drop(3)).foldLeft(
+                ElemExp(Integer.parseInt(s"0${octalPart}", 8).toChar): RegExp[Char]
+              )((r, c) => ConcatExp(r, ElemExp(c)))
             } else {
               if (s.toInt <= captureGroups.min(99)) {
                 BackReferenceExp(s.toInt, None)
@@ -74,9 +75,9 @@ object RegExpIR {
           case NamedBackReferenceExpIR(name) =>
             groupNameMap.get(name) match {
               case Some(id) => BackReferenceExp(id, Some(name))
-              case None => throw RegExp.InvalidRegExpException(s"undefined group name: ${name}")
+              case None     => throw RegExp.InvalidRegExpException(s"undefined group name: ${name}")
             }
-          case _ => recursiveApply(r,convert)
+          case _ => recursiveApply(r, convert)
         }
       }
 
