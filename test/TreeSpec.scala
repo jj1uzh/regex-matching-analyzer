@@ -1,11 +1,9 @@
 package matching.monad
 
-import org.scalatest._
+import matching.monad.Monad._
+import matching.monad.Tree._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-
-import Monad._
-import Tree._
 
 class TreeSpec extends AnyFlatSpec with Matchers {
   "bind" should "calculate bind" in {

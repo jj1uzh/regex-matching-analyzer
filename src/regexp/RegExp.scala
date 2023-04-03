@@ -1,16 +1,16 @@
 package matching.regexp
 
-import collection.mutable.Stack
 import matching.Witness
-import matching.monad._
 import matching.monad.AMonad._
-//import matching.monad.ATree._
-import matching.monad.StateT._
-import matching.transition._
-import matching.tool.{Analysis, Debug, IO}
-
 import matching.monad.Monad._
-import Tree._
+import matching.monad.StateT._
+import matching.monad.Tree._
+import matching.tool.Analysis
+import matching.tool.Debug
+import matching.tool.IO
+import matching.transition._
+
+import scala.collection.mutable.Stack
 
 trait RegExp[A] {
   override def toString(): String = RegExp.toString(this)
@@ -73,7 +73,7 @@ object RepeatExp {
     validate()
 
     (min, max) match {
-      case (min, Some(0))  => EpsExp()
+      case (_, Some(0))  => EpsExp()
       case (Some(0), None) => StarExp(r, greedy)
       case (Some(0), max)  => new RepeatExp(r, None, max, greedy)
       case _               => new RepeatExp(r, min, max, greedy)
@@ -421,7 +421,7 @@ object RegExp {
         case OptionExp(r, _)   => getElems(r)
         case RepeatExp(r, _, _, _) => getElems(r)
         case LookaheadExp(r, _)    => getElems(r)
-        case r @ CharClassExp(es, positive) =>
+        case CharClassExp(es, _) =>
           val s = es.flatMap(_.charSet).toSet
           if (options.ignoreCase) {
             s.map {
@@ -430,7 +430,7 @@ object RegExp {
             }
           } else s
         case DotExp() => if (options.dotAll) Set() else Set('\n')
-        case r @ MetaCharExp(c) =>
+        case r @ MetaCharExp(_) =>
           val s = r.charSet
           if (options.ignoreCase) {
             s.map {

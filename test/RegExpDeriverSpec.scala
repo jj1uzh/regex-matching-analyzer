@@ -1,10 +1,9 @@
 package matching.regexp
 
-import org.scalatest._
+import matching.monad.StateT._
+import matching.monad._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import matching.monad._
-import StateT._
 
 class RegExpDeriverSpec extends AnyFlatSpec with Matchers {
   implicit var deriver = new RegExpSetTreeDeriver()

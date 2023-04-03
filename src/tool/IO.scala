@@ -1,8 +1,9 @@
 package matching.tool
 
-import io.Source
-import java.nio.file.{Paths, Files}
 import java.io.PrintWriter
+import java.nio.file.Files
+import java.nio.file.Paths
+import scala.io.Source
 
 object IO {
   def loadFile(fileName: String): Source = {

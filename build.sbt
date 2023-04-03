@@ -4,9 +4,18 @@ scalaVersion := "2.13.10"
 Compile / scalaSource := baseDirectory.value / "src"
 Test / scalaSource := baseDirectory.value / "test"
 
-scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked")
+scalacOptions ++= Seq(
+  "-deprecation",
+  "-feature",
+  "-unchecked",
+  "-Ywarn-unused"
+)
 scalacOptions ++= Seq("-language:higherKinds")
-scalafixOnCompile := true
+
+ThisBuild / semanticdbEnabled := true
+ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+ThisBuild / scalafixOnCompile := true
+ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % "test"

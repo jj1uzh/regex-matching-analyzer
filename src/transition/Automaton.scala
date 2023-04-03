@@ -1,7 +1,8 @@
 package matching.transition
 
-import collection.mutable.Stack
 import matching.tool.Analysis
+
+import scala.collection.mutable.Stack
 
 class NFA[Q, A](
     val states: Set[Q],

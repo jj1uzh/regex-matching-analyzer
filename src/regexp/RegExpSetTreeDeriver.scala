@@ -1,10 +1,10 @@
 package matching.regexp
 
+import matching.monad.AMonad._
+import matching.monad.Monad._
+import matching.monad.StateT._
 import matching.monad._
-import AMonad._
-import RegExp._
-import Monad._
-import StateT._
+import matching.regexp.RegExp._
 
 //SetTree ver.
 class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m: Monad[StateTBooleanSetTree] with StateOperatablenoAssert[StateTBooleanSetTree,Boolean]){
@@ -20,7 +20,7 @@ class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m:
                 } else a == c
               case None => false
             }
-            case RangeExp(start, end) => a match {
+            case RangeExp(_, _) => a match {
               case Some(a) =>
                 if (options.ignoreCase && a.isLetter) {
                   r.charSet.contains(a.toLower) || r.charSet.contains(a.toUpper)
@@ -113,7 +113,7 @@ class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m:
         val rd = derive(r,a)
         if (positive) m.assert(rd, m(None)) else m.assertNot(rd, m(None))
         */
-      case LookbehindExp(r,positive) => ???
+      case LookbehindExp(_,_) => ???
       /*
       case FailEpsExp() => m.fail(m(None))
       */
@@ -179,7 +179,7 @@ class RegExpSetTreeDeriver(options: PCREOptions = new PCREOptions())(implicit m:
         val rd = deriveEOL(r)
         if (positive) m.assert(rd, m(())) else m.assertNot(rd, m(()))
       */
-      case LookbehindExp(r,positive) => ???
+      case LookbehindExp(_,_) => ???
       /*
       case FailEpsExp() => m.fail(m(()))
       */

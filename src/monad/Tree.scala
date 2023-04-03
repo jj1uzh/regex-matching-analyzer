@@ -1,6 +1,6 @@
 package matching.monad
 
-import Monad._
+import matching.monad.Monad._
 
 sealed trait Tree[+A]
 case class Leaf[A](a: A) extends Tree[A]
@@ -109,7 +109,7 @@ object Tree {
 
   def isNonTrivial[A](m: Tree[A]): Boolean = {
     m match {
-      case Leaf(a) => false
+      case Leaf(_) => false
       case _ => true
     }
   }

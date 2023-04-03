@@ -1,17 +1,19 @@
 package matching
 
 import matching.TestResult._
-import matching.regexp._
 import matching.regexp.RegExp._
+import matching.regexp._
 import matching.tool.Analysis
 import matching.tool.Analysis.{Success => _, Timeout => _, _}
+import matching.tool.Debug
+import matching.tool.File
+import matching.tool.IO
 import matching.transition._
-import matching.tool.{IO, File, Debug}
 
-import scala.io.StdIn
-import scala.collection.mutable.{Map => MTMap}
-import java.util.Date
 import java.text.DateFormat
+import java.util.Date
+import scala.collection.mutable.{Map => MTMap}
+import scala.io.StdIn
 
 object Main {
   class Settings() {
@@ -45,7 +47,7 @@ object Main {
               try {
                 timeout.toInt
               } catch {
-                case e: NumberFormatException =>
+                case _: NumberFormatException =>
                   throw new Exception(s"invalid timeout option: ${timeout}")
               }
             setting.timeout = if (t > 0) Some(t) else None
@@ -172,7 +174,7 @@ object Main {
           d match {
             case Some(0) => "constant"
             case Some(1) => "linear"
-            case Some(d) => "polynomial"
+            case Some(_) => "polynomial"
             case None    => "exponential"
           }
         case Skipped(_) => "skipped"

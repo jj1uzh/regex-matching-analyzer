@@ -1,11 +1,9 @@
 package matching.monad
 
-import org.scalatest._
+import matching.monad.AMonad._
+import matching.monad.StateT._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-
-import StateT._
-import AMonad._
 
 class StateTSpec extends AnyFlatSpec with Matchers {
   "update" should "read current state" in {

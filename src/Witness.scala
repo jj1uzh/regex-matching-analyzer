@@ -1,6 +1,6 @@
 package matching
 
-import tool.IO
+import matching.tool.IO
 
 case class Witness[A](var separators: Seq[Seq[A]],pumps: Seq[Seq[A]]) {
   override def toString(): String = {

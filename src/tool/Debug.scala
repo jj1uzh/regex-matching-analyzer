@@ -1,6 +1,6 @@
 package matching.tool
 
-import Console._
+import scala.Console._
 
 object Debug {
   var debugModeGlobal = false

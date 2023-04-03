@@ -1,6 +1,6 @@
 package matching.monad
 
-import AMonad._
+import matching.monad.AMonad._
 
 sealed trait ATree[A,B]
 case class ALeaf[A,B](b: B) extends ATree[A,B]

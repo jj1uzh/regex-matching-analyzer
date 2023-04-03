@@ -1,10 +1,10 @@
 package matching.regexp
 
+import matching.monad.AMonad._
+import matching.monad.Monad._
+import matching.monad.StateT._
 import matching.monad._
-import AMonad._
-import RegExp._
-import Monad._
-import StateT._
+import matching.regexp.RegExp._
 
 //SetLft ver.
 class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(m: Monad[StateTBooleanSetTree] with StateOperatablenoAssert[StateTBooleanSetTree,Boolean]){
@@ -21,7 +21,7 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(m: Monad[Sta
                 } else a == c
               case None => false
             }
-            case RangeExp(start, end) => {
+            case RangeExp(_, _) => {
               if(r.charSet.size>1) mayfail=true
                 a match {
                 case Some(a) =>
@@ -129,7 +129,7 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(m: Monad[Sta
         val rd = derive(r,a)
         if (positive) m.assert(rd, m(None)) else m.assertNot(rd, m(None))
       */
-      case LookbehindExp(r,positive) => ???
+      case LookbehindExp(_,_) => ???
       /*
       case FailEpsExp() => m.fail(m(None))
       */
@@ -179,7 +179,7 @@ class RegExpSetLftDeriver(options: PCREOptions = new PCREOptions())(m: Monad[Sta
         val rd = deriveEOL(r)
         if (positive) m.assert(rd, m(())) else m.assertNot(rd, m(()))
         */
-      case LookbehindExp(r,positive) => ???
+      case LookbehindExp(_,_) => ???
       /*
       case FailEpsExp() => m.fail(m(()))
       */

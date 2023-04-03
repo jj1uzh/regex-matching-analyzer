@@ -1,7 +1,6 @@
 package matching.regexp
 
-import RegExpParser._
-import org.scalatest._
+import matching.regexp.RegExpParser._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 

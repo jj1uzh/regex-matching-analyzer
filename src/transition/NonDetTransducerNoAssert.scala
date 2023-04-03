@@ -1,10 +1,11 @@
 package matching.transition
 
 import matching.Witness
-import matching.monad._
-import matching.tool.{Analysis, Debug}
 import matching.monad.Monad._
 import matching.monad.Tree._
+import matching.monad._
+import matching.tool.Analysis
+import matching.tool.Debug
 
 class NonDetNoAssertTreeTransducer[Q,A](
   val states: Set[Q],
@@ -422,8 +423,8 @@ class NonDetNoAssertTreeTransducer[Q,A](
       witness.separators = Seq(witness.separators.head.tail) ++ witness.separators.tail
       witness.separators :+= Seq()
     }
-    val adjusted_separators = witness.separators.map{case lst => lst.map{case (a,i,q,q_prime) => a}}
-    val adjusted_pumps = witness.pumps.map{case lst => lst.map{case (a,i,q,q_prime) => a}}
+    val adjusted_separators = witness.separators.map{case lst => lst.map{case (a,_,_,_) => a}}
+    val adjusted_pumps = witness.pumps.map{case lst => lst.map{case (a,_,_,_) => a}}
     (growthRate.map(_+1), new Witness(adjusted_separators,adjusted_pumps))
   }
 

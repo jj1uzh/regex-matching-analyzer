@@ -1,6 +1,7 @@
 package matching.tool
 
-import matching.transition.{Graph, NFA}
+import matching.transition.Graph
+import matching.transition.NFA
 
 object Visualizer {
   def esc(a: Any): String = {

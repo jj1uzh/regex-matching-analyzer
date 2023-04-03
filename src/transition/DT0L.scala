@@ -1,7 +1,8 @@
 package matching.transition
 
 import matching.Witness
-import matching.tool.{Analysis, Debug}
+import matching.tool.Analysis
+import matching.tool.Debug
 
 class DT0L[A, Q](
     val states: Set[Q],
@@ -56,7 +57,7 @@ class DT0L[A, Q](
       val reachableMapScGraph = scGraph.reachableMapDAG()
       val reachableMapScGraphRev = scGraph.reverse().reachableMapDAG()
       val scPairLabeledAdj = graph.labeledEdges
-        .groupBy { case (q1, a, q2) =>
+        .groupBy { case (q1, _, q2) =>
           Analysis.checkInterrupted("preparing for calculate growth rate")
           (scMap(q1), scMap(q2))
         }
@@ -72,7 +73,7 @@ class DT0L[A, Q](
         .toMap
         .withDefaultValue(Map().withDefaultValue(Seq()))
 
-      val hasSelfLoop = graph.labeledEdges.collect { case (q1, a, q2) if q1 == q2 => q1 }.toSet
+      val hasSelfLoop = graph.labeledEdges.collect { case (q1, _, q2) if q1 == q2 => q1 }.toSet
       def isAtom(sc: Set[Q]): Boolean = {
         sc.size == 1 && !hasSelfLoop(sc.head)
       }
@@ -285,7 +286,7 @@ class PairDT0L[A, R, P](
       val reachableMapScGraph = scGraph.reachableMapDAG()
       val reachableMapScGraphRev = scGraph.reverse().reachableMapDAG()
       val scPairLabeledAdj = graph.labeledEdges
-        .groupBy { case (q1, a, q2) =>
+        .groupBy { case (q1, _, q2) =>
           Analysis.checkInterrupted("preparing for calculate growth rate")
           (scMap(q1), scMap(q2))
         }
@@ -302,7 +303,7 @@ class PairDT0L[A, R, P](
         .withDefaultValue(Map().withDefaultValue(Seq()))
       val secondComponentMap = scs.map(sc => sc -> sc.map(_._2)).toMap
 
-      val hasSelfLoop = graph.labeledEdges.collect { case (q1, a, q2) if q1 == q2 => q1 }.toSet
+      val hasSelfLoop = graph.labeledEdges.collect { case (q1, _, q2) if q1 == q2 => q1 }.toSet
       def isAtom(sc: Set[Q]): Boolean = {
         sc.size == 1 && !hasSelfLoop(sc.head)
       }
@@ -339,7 +340,7 @@ class PairDT0L[A, R, P](
                     sc.exists { case ((r1, r2), _) => r1 != r2 }
                 )
                 .map { case sc =>
-                  val q1 @ ((r1, r2), _) = sc.find { case ((r1, r2), p) => r1 != r2 }.get
+                  val q1 @ ((r1, r2), _) = sc.find { case ((r1, r2), _) => r1 != r2 }.get
                   val q2 @ (_, p0) = sc.find { case ((r3, r4), _) => r3 == r1 && r4 == r1 }.get
                   val path1 = g2.getPath(q2, q1).get
                   val path2 = g2.getPath(q1, q2).get

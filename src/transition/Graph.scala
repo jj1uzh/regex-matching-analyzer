@@ -1,7 +1,9 @@
 package matching.transition
 
-import collection.mutable.{Queue, Stack}
 import matching.tool.Analysis
+
+import scala.collection.mutable.Queue
+import scala.collection.mutable.Stack
 
 class Graph[V](
     val nodes: Set[V],
@@ -152,7 +154,7 @@ class LabeledGraph[V, A](
     val reachableNodes = vs.flatMap(reachableFrom)
     new LabeledGraph(
       reachableNodes,
-      labeledEdges.filter { case (q1, a, q2) => reachableNodes(q1) && reachableNodes(q2) }
+      labeledEdges.filter { case (q1, _, q2) => reachableNodes(q1) && reachableNodes(q2) }
     )
   }
 

@@ -1,8 +1,8 @@
 package matching.tool
 
-import concurrent._
-import concurrent.duration._
-import ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent._
+import scala.concurrent.duration._
 
 object Analysis {
   sealed trait AnalysisResult[+A]

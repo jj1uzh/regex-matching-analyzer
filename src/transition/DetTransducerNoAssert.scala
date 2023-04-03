@@ -1,11 +1,13 @@
 package matching.transition
 
-import collection.mutable.Stack
 import matching.Witness
-import matching.monad._
-import matching.tool.{Analysis, Debug}
 import matching.monad.Monad._
 import matching.monad.Tree._
+import matching.monad._
+import matching.tool.Analysis
+import matching.tool.Debug
+
+import scala.collection.mutable.Stack
 
 class DetNoAssertTreeTransducer[Q, A](
     states: Set[Q],

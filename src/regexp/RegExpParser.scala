@@ -1,8 +1,9 @@
 package matching.regexp
 
-import util.parsing.combinator._
-import RegExp._
-import RegExpIR._
+import matching.regexp.RegExp._
+import matching.regexp.RegExpIR._
+
+import scala.util.parsing.combinator._
 
 class RegExpParser() extends RegexParsers {
   override val skipWhitespace = false

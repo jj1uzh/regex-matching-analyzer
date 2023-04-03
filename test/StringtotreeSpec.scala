@@ -1,8 +1,6 @@
-import org.scalatest._
-import org.scalatest.flatspec.AnyFlatSpec
-
 import matching.monad._
 import matching.transition._
+import org.scalatest.flatspec.AnyFlatSpec
 
 class stringtotreeTest extends AnyFlatSpec {
   "toDeterministic " should "success" in {

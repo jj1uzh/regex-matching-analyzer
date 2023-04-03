@@ -1,7 +1,7 @@
 package matching.tool
 
-import sys.process._
-import collection.mutable.ArrayBuffer
+import scala.collection.mutable.ArrayBuffer
+import scala.sys.process._
 
 object Command {
   case class CommandResult(exitCode: Int, out: ArrayBuffer[String], err: ArrayBuffer[String])

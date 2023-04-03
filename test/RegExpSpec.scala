@@ -1,11 +1,9 @@
 package matching.regexp
 
-import org.scalatest._
+import matching.regexp.RegExp._
+import matching.transition._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-
-import RegExp._
-import matching.transition._
 
 class RegExpSpec extends AnyFlatSpec with Matchers {
   "optConcatExp" should "concat expressions with optimization on ε" in {

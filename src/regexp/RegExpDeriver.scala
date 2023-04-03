@@ -1,8 +1,8 @@
 package matching.regexp
 
+import matching.monad.AMonad._
 import matching.monad._
-import AMonad._
-import RegExp._
+import matching.regexp.RegExp._
 
 class RegExpDeriver[M[_,_]](options: PCREOptions = new PCREOptions())(implicit m: AMonad[M] with StateOperatable[M, Boolean]) {
   def derive[A](r: RegExp[A], a: Option[A]): M[Option[RegExp[A]], Option[RegExp[A]]] = {
@@ -17,7 +17,7 @@ class RegExpDeriver[M[_,_]](options: PCREOptions = new PCREOptions())(implicit m
                 } else a == c
               case None => false
             }
-            case RangeExp(start, end) => a match {
+            case RangeExp(_, _) => a match {
               case Some(a) =>
                 if (options.ignoreCase && a.isLetter) {
                   r.charSet.contains(a.toLower) || r.charSet.contains(a.toUpper)
@@ -109,7 +109,7 @@ class RegExpDeriver[M[_,_]](options: PCREOptions = new PCREOptions())(implicit m
       case LookaheadExp(r,positive) =>
         val rd = derive(r,a)
         if (positive) m.assert(rd, m(None)) else m.assertNot(rd, m(None))
-      case LookbehindExp(r,positive) => ???
+      case LookbehindExp(_,_) => ???
       case FailEpsExp() => m.fail(m(None))
       case _ => throw new Exception(s"internal error.")
     }
@@ -153,7 +153,7 @@ class RegExpDeriver[M[_,_]](options: PCREOptions = new PCREOptions())(implicit m
       case LookaheadExp(r,positive) =>
         val rd = deriveEOL(r)
         if (positive) m.assert(rd, m(())) else m.assertNot(rd, m(()))
-      case LookbehindExp(r,positive) => ???
+      case LookbehindExp(_,_) => ???
       case FailEpsExp() => m.fail(m(()))
       case _ => throw new Exception(s"internal error.")
     }

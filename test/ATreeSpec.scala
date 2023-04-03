@@ -1,12 +1,10 @@
 package matching.monad
 
-import org.scalatest._
+import matching.monad.AMonad._
+import matching.monad.ATree.ATreeMonad._
+import matching.monad.ATree._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-
-import AMonad._
-import ATree._
-import ATree.ATreeMonad._
 
 class ATreeSpec extends AnyFlatSpec with Matchers {
   ">>=l" should "calculate left bind" in {

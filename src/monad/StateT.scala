@@ -1,9 +1,9 @@
 package matching.monad
 
-import AMonad._
-import ATree._
-import Tree._
-import Monad._
+import matching.monad.AMonad._
+import matching.monad.ATree._
+import matching.monad.Monad._
+import matching.monad.Tree._
 
 trait StateOperatable[M[_,_], S] {
   def update[A](f: S => S): M[A,S]

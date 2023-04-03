@@ -1,11 +1,13 @@
 package matching.transition
 
-import collection.mutable.Stack
 import matching.Witness
-import matching.monad._
 import matching.monad.AMonad._
 import matching.monad.ATree._
-import matching.tool.{Analysis, Debug}
+import matching.monad._
+import matching.tool.Analysis
+import matching.tool.Debug
+
+import scala.collection.mutable.Stack
 
 class NonDetTransducer[Q, A](
     val states: Set[Q],
@@ -261,12 +263,12 @@ class DetTransducer[Q, A](
 
         var deltaLA = Map[(Q, Option[(A, Set[Q])]), ATree[Q, Q]]()
         deltaDet.foreach {
-          case ((q, Some(a)), t) =>
+          case ((q, Some(a)), _) =>
             Analysis.checkInterrupted("transducer -> transducer with lookahead")
             lookaheadDFA.states.foreach(p =>
               deltaLA += (q, Some((a, p))) -> prune(deltaDet((q, Some(a))), p)
             )
-          case ((q, None), t) =>
+          case ((q, None), _) =>
             deltaLA += (q, None) -> prune(deltaDet((q, None)))
         }
 
