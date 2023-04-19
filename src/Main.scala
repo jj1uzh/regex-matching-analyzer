@@ -2,6 +2,7 @@ package matching
 
 import matching.TestResult._
 import matching.regexp.RegExp._
+import matching.regexp.RegExpStructureAnalysis.StructureAnalyzer
 import matching.regexp._
 import matching.tool.Analysis
 import matching.tool.Analysis.{Success => _, Timeout => _, _}
@@ -13,7 +14,12 @@ import matching.transition._
 import java.text.DateFormat
 import java.util.Date
 import scala.collection.mutable.{Map => MTMap}
+import scala.collection.mutable.{Set => MSet}
 import scala.io.Source
+import scala.util.Failure
+import scala.util.Try
+import scala.util.control.Exception.nonFatalCatch
+import scala.util.{Success => Succ}
 
 object Main {
   class Settings() {
@@ -85,22 +91,22 @@ object Main {
     }
   }
 
-  def test(regExpStr: String, settings: Settings): TestResult = {
-    try {
-      val (r, options) = settings.style match {
-        case Raw  => (RegExpParser(regExpStr), new PCREOptions())
-        case PCRE => RegExpParser.parsePCRE(regExpStr)
+  def parseRegex(regexStr: String, settings: Settings): Try[(RegExp[Char], PCREOptions)] =
+    nonFatalCatch.withTry {
+      settings.style match {
+        case Raw  => (RegExpParser(regexStr), new PCREOptions())
+        case PCRE => RegExpParser.parsePCRE(regexStr)
       }
-      runWithLimit(settings.timeout) {
-        calcTimeComplexity(r, options, settings.method)
-      } match {
-        case (Analysis.Success((growthRate, witness, approximated, ruleSize)), time) =>
-          Success(growthRate, witness, approximated, ruleSize, time)
-        case (Analysis.Failure(message), _) => Skipped(message)
-        case (Analysis.Timeout(_), _)       => Timeout
-      }
-    } catch {
-      case e: RegExpParser.ParseException => Error(e.message)
+    }
+
+  def test(r: RegExp[Char], options: PCREOptions, settings: Settings): TestResult = {
+    runWithLimit(settings.timeout) {
+      calcTimeComplexity(r, options, settings.method)
+    } match {
+      case (Analysis.Success((growthRate, witness, approximated, ruleSize)), time) =>
+        Success(growthRate, witness, approximated, ruleSize, time)
+      case (Analysis.Failure(message), _) => Skipped(message)
+      case (Analysis.Timeout(_), _)       => Timeout
     }
   }
 
@@ -109,7 +115,11 @@ object Main {
     Source.stdin
       .getLines()
       .takeWhile { _.nonEmpty }
-      .map { test(_, settings) }
+      .map { parseRegex(_, settings) }
+      .map {
+        case Succ((r, opt)) => test(r, opt, settings)
+        case Failure(e)     => TestResult.Error(e.getMessage())
+      }
       .foreach { result => println(s"$result\n") }
   }
 
@@ -236,10 +246,21 @@ object Main {
       )
     }
 
+    val analyzerManager = RegexStructureAnalyzerManager(
+      RegExpStructureAnalysis.HasLookbehind,
+      RegExpStructureAnalysis.HasLookbehindWithCapture
+    )
+
     regExpStrs.zipWithIndex.foreach { case (regExpStr, idx) =>
       printProgress(idx)
       println(regExpStr)
-      writeResult(regExpStr, test(regExpStr, settings))
+      val parsedRegexTry = parseRegex(regExpStr, settings)
+      parsedRegexTry.foreach { case (r, _) => analyzerManager.analyze(r) }
+      val result = parsedRegexTry.fold(
+        err => TestResult.Error(err.getMessage()),
+        { case (r, opt) => test(r, opt, settings) }
+      )
+      writeResult(regExpStr, result)
     }
 
     val finishTime = dateFormat.format(new Date())
@@ -293,6 +314,8 @@ object Main {
     }
     summaryFile.writeln(s"${"-" * 40}")
 
+    analyzerManager.printResult(summaryFile)
+
     resultFile.close()
     resultListFile.close()
     timeFile.close()
@@ -301,5 +324,32 @@ object Main {
     detailListFiles.values.foreach(_.close())
     degreeFiles.values.foreach(_.close())
     degreeListFiles.values.foreach(_.close())
+  }
+
+  class RegexStructureAnalyzersManager(
+      analyzers: Seq[StructureAnalyzer[Char, RegExp[Char]]]
+  ) {
+    private val agg: Seq[MSet[RegExp[Char]]] = Vector.fill(analyzers.size)(MSet())
+    private val zipped = analyzers zip agg
+    def analyze(r: RegExp[Char]): Unit =
+      zipped.foreach { case (analyzer, set) =>
+        if (analyzer.analyze(r)) {
+          set += r
+        }
+      }
+    def printResult(file: File): Unit = {
+      file.writeln("--- Structure Analysis --------------------------")
+      zipped.foreach { case (analyzer, set) =>
+        file.writeln(s"==> ${analyzer.name}")
+        file.writeln(s"  -> Total: ${set.size}")
+        set.foreach { r => file.writeln(s"      ${r.toString}") }
+        file.writeln()
+      }
+      file.writeln("-------------------------------------------------")
+    }
+  }
+  object RegexStructureAnalyzerManager {
+    def apply(analyzers: StructureAnalyzer[Char, RegExp[Char]]*): RegexStructureAnalyzersManager =
+      new RegexStructureAnalyzersManager(analyzers)
   }
 }

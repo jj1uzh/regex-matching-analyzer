@@ -27,16 +27,37 @@ trait RegExp[A] {
   def deriveEOL[M[_]]()(implicit deriver: RegExpSetTreeDeriver) = deriver.deriveEOL(this)
 }
 
-case class ElemExp[A](a: A) extends RegExp[A]
-case class EmptyExp[A]() extends RegExp[A]
-case class EpsExp[A]() extends RegExp[A]
-case class ConcatExp[A](r1: RegExp[A], r2: RegExp[A]) extends RegExp[A]
-case class AltExp[A](r1: RegExp[A], r2: RegExp[A]) extends RegExp[A]
-case class StarExp[A](r: RegExp[A], greedy: Boolean) extends RegExp[A]
-case class PlusExp[A](r: RegExp[A], greedy: Boolean) extends RegExp[A]
-case class OptionExp[A](r: RegExp[A], greedy: Boolean) extends RegExp[A]
-case class RepeatExp[A](r: RegExp[A], var min: Option[Int], var max: Option[Int], greedy: Boolean)
+sealed trait RegExpLeaf[A] extends RegExp[A]
+
+sealed class RegExpOp1[A](val child: RegExp[A]) extends RegExp[A]
+object RegExpOp1 {
+  def unapply[A](rr: RegExpOp1[A]): Option[RegExp[A]] =
+    Some(rr.child)
+}
+
+sealed class RegExpOp2[A](val child1: RegExp[A], val child2: RegExp[A]) extends RegExp[A]
+object RegExpOp2 {
+  def unapply[A](rr: RegExpOp2[A]): Option[(RegExp[A], RegExp[A])] =
+    Some(rr.child1, rr.child2)
+}
+
+sealed class RegExpOp3[A](val child1: RegExp[A], val child2: RegExp[A], val child3: RegExp[A])
     extends RegExp[A]
+object RegExpOp3 {
+  def unapply[A](rr: RegExpOp3[A]): Option[(RegExp[A], RegExp[A], RegExp[A])] =
+    Some(rr.child1, rr.child2, rr.child3)
+}
+
+case class ElemExp[A](a: A) extends RegExpLeaf[A]
+case class EmptyExp[A]() extends RegExpLeaf[A]
+case class EpsExp[A]() extends RegExpLeaf[A]
+case class ConcatExp[A](r1: RegExp[A], r2: RegExp[A]) extends RegExpOp2[A](r1, r2)
+case class AltExp[A](r1: RegExp[A], r2: RegExp[A]) extends RegExpOp2[A](r1, r2)
+case class StarExp[A](r: RegExp[A], greedy: Boolean) extends RegExpOp1[A](r)
+case class PlusExp[A](r: RegExp[A], greedy: Boolean) extends RegExpOp1[A](r)
+case class OptionExp[A](r: RegExp[A], greedy: Boolean) extends RegExpOp1[A](r)
+case class RepeatExp[A](r: RegExp[A], var min: Option[Int], var max: Option[Int], greedy: Boolean)
+    extends RegExpOp1[A](r)
 object RepeatExp {
   def apply[A](r: RegExp[A], min: Option[Int], max: Option[Int], greedy: Boolean): RegExp[A] = {
     def validate(): Unit = {
@@ -73,23 +94,24 @@ object RepeatExp {
     validate()
 
     (min, max) match {
-      case (_, Some(0))  => EpsExp()
+      case (_, Some(0))    => EpsExp()
       case (Some(0), None) => StarExp(r, greedy)
       case (Some(0), max)  => new RepeatExp(r, None, max, greedy)
       case _               => new RepeatExp(r, min, max, greedy)
     }
   }
 }
-case class GroupExp[A](r: RegExp[A], id: Int, name: Option[String]) extends RegExp[A]
-case class BackReferenceExp[A](n: Int, name: Option[String]) extends RegExp[A]
-case class StartAnchorExp[A]() extends RegExp[A]
-case class EndAnchorExp[A]() extends RegExp[A]
-case class LookaheadExp[A](r: RegExp[A], positive: Boolean) extends RegExp[A]
-case class LookbehindExp[A](r: RegExp[A], positive: Boolean) extends RegExp[A]
-case class IfExp[A](cond: RegExp[A], rt: RegExp[A], rf: RegExp[A]) extends RegExp[A]
-case class DotExp[A]() extends RegExp[A]
-case class CharClassExp(es: Seq[CharClassElem], positive: Boolean) extends RegExp[Char]
-case class MetaCharExp(c: Char) extends RegExp[Char] with CharClassElem {
+case class GroupExp[A](r: RegExp[A], id: Int, name: Option[String]) extends RegExpOp1[A](r)
+case class BackReferenceExp[A](n: Int, name: Option[String]) extends RegExpLeaf[A]
+case class StartAnchorExp[A]() extends RegExpLeaf[A]
+case class EndAnchorExp[A]() extends RegExpLeaf[A]
+case class LookaheadExp[A](r: RegExp[A], positive: Boolean) extends RegExpOp1[A](r)
+case class LookbehindExp[A](r: RegExp[A], positive: Boolean) extends RegExpOp1[A](r)
+case class IfExp[A](cond: RegExp[A], rt: RegExp[A], rf: RegExp[A])
+    extends RegExpOp3[A](cond, rt, rf)
+case class DotExp[A]() extends RegExpLeaf[A]
+case class CharClassExp(es: Seq[CharClassElem], positive: Boolean) extends RegExpLeaf[Char]
+case class MetaCharExp(c: Char) extends RegExpLeaf[Char] with CharClassElem {
   val negetiveChar = Set('D', 'H', 'S', 'V', 'W')
 
   val charSet = c match {
@@ -105,14 +127,14 @@ case class MetaCharExp(c: Char) extends RegExp[Char] with CharClassElem {
 
   val negative = negetiveChar(c)
 }
-case class BoundaryExp() extends RegExp[Char]
+case class BoundaryExp() extends RegExpLeaf[Char]
 
-case class FailEpsExp[A]() extends RegExp[A]
+case class FailEpsExp[A]() extends RegExpLeaf[A]
 
 //for modify in backreference
-case class MTreeExp[A](r: RegExp[A]) extends RegExp[A]
+case class MTreeExp[A](r: RegExp[A]) extends RegExpOp1[A](r)
 
-case class MTreePrimeExp[A](r: RegExp[A]) extends RegExp[A]
+case class MTreePrimeExp[A](r: RegExp[A]) extends RegExpOp1[A](r)
 
 object RegExp {
   case class InvalidRegExpException(message: String) extends Exception(message: String)
