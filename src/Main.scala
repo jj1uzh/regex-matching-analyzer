@@ -14,7 +14,6 @@ import java.text.DateFormat
 import java.util.Date
 import scala.collection.mutable.{Map => MTMap}
 import scala.io.Source
-import scala.io.StdIn
 
 object Main {
   class Settings() {
@@ -122,7 +121,7 @@ object Main {
     val startTime = dateFormat.format(new Date())
 
     val dirName =
-      s"output/${inputFile.replaceAll("""\W""", "_")}_${startTime.replaceAll("""\W""", "-")}"
+      s"""output/${inputFile.replaceAll(raw"\W", "_")}_${startTime.replaceAll(raw"\W", "-")}"""
 
     IO.createDirectory(dirName)
 
