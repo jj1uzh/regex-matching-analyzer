@@ -6,6 +6,7 @@ import matching.monad.ATree._
 import matching.monad._
 import matching.tool.Analysis
 import matching.tool.Debug
+import matching.transition.BacktrackMethod._
 
 import scala.collection.mutable.Stack
 

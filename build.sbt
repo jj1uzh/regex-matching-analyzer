@@ -20,6 +20,8 @@ ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports"
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % "test"
 
+libraryDependencies += "com.beachape" %% "enumeratum" % "1.7.2"
+
 Global / lintUnusedKeysOnLoad := false
 
 ThisBuild / useSuperShell := false

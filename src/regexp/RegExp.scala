@@ -8,6 +8,8 @@ import matching.monad.Tree._
 import matching.tool.Analysis
 import matching.tool.Debug
 import matching.tool.IO
+import matching.transition.BacktrackMethod.BDM
+import matching.transition.BacktrackMethod.KM
 import matching.transition._
 
 import scala.collection.mutable.Stack

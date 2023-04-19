@@ -3,12 +3,15 @@ package matching
 import matching.TestResult._
 import matching.regexp.RegExp._
 import matching.regexp.RegExpStructureAnalysis.StructureAnalyzer
+import matching.regexp.RegExpStyle
 import matching.regexp._
 import matching.tool.Analysis
 import matching.tool.Analysis.{Success => _, Timeout => _, _}
 import matching.tool.Debug
 import matching.tool.File
 import matching.tool.IO
+import matching.transition.BacktrackMethod.BDM
+import matching.transition.BacktrackMethod.KM
 import matching.transition._
 
 import java.text.DateFormat
@@ -21,81 +24,109 @@ import scala.util.Try
 import scala.util.control.Exception.nonFatalCatch
 import scala.util.{Success => Succ}
 
-object Main {
-  class Settings() {
-    var style: RegExpStyle = Raw
-    var method: Option[BacktrackMethod] = Some(KM)
-    var timeout: Option[Int] = Some(10)
+/** Settings.
+  * @param style
+  *   Regex style.
+  * @param method
+  *   Backtrack method.
+  * @param timeout
+  *   Timeout seconds.
+  * @param file
+  *   Input file.
+  */
+case class Settings(
+    style: RegExpStyle = RegExpStyle.Raw,
+    method: Option[BacktrackMethod] = Some(KM),
+    timeout: Option[Int] = Some(10),
+    file: Option[String] = None,
+) {
+  override def toString(): String =
+    s"""--- settings ---------------------------
+       |style: $style
+       |timeout: ${timeout.fold("disabled")(t => s"$t s")}
+       |----------------------------------------
+       |""".stripMargin
+}
 
-    override def toString(): String =
-      s"""--- settings ---------------------------
-         |style: $style
-         |timeout: ${if (timeout.isDefined) s"${timeout.get}s" else "disabled"}
-         |----------------------------------------
-         |""".stripMargin
+object Settings {
+  def parseArgs(args: Array[String]): Either[OptParseError, Settings] =
+    rec(args.toList, Settings())
+
+  final case class OptParseError(msg: String) extends AnyVal
+
+  private def rec(args: List[String], s: Settings): Either[OptParseError, Settings] = args match {
+    case ("-s" | "--style") :: styleStr :: rest =>
+      RegExpStyle
+        .withNameLowercaseOnlyOption(styleStr.toLowerCase)
+        .fold[Either[OptParseError, Settings]](Left(OptParseError(s"Unknown style: $styleStr")))(
+          style => Right(s.copy(style = style))
+        )
+        .thenParse(rest)
+    case ("-t" | "--timeout") :: timeoutStr :: rest =>
+      timeoutStr.toIntOption
+        .filter(_ > 0)
+        .fold[Either[OptParseError, Settings]](
+          Left(OptParseError(s"Invalid timeout value: $timeoutStr"))
+        )(value => Right(s.copy(timeout = Some(value))))
+        .thenParse(rest)
+    case ("-m" | "--method") :: methodStr :: rest =>
+      BacktrackMethod
+        .withNameLowercaseOnlyOption(methodStr.toLowerCase)
+        .collect { case m @ (KM | BDM) => m }
+        .fold[Either[OptParseError, Settings]](Left(OptParseError(s"Unknown method: $methodStr")))(
+          method => Right(s.copy(method = Some(method)))
+        )
+        .thenParse(rest)
+    case ("-d" | "--debug") :: rest =>
+      Debug.debugModeGlobal = true
+      rec(rest, s)
+    case path :: rest if s.file.isEmpty =>
+      Right(s.copy(file = Some(path))) thenParse rest
+    case Nil =>
+      Right(s)
+    case args =>
+      Left(OptParseError(s"Invalid argument: ${args mkString " "}"))
   }
 
+  private implicit class SettingsOpt(val self: Either[OptParseError, Settings]) extends AnyVal {
+    @inline def thenParse(rest: List[String]): Either[OptParseError, Settings] =
+      self.flatMap(rec(rest, _))
+  }
+}
+
+object Main {
+
   def main(args: Array[String]): Unit = {
-    def parseArgs(rawArgs: Array[String]): (Option[String], Settings) = {
-      def parseOptions(options: List[String], setting: Settings = new Settings()): Settings = {
-        options match {
-          case "--style" :: style :: options =>
-            setting.style = style match {
-              case "raw"  => Raw
-              case "PCRE" => PCRE
-              case _      => throw new Exception(s"invalid style option: ${style}")
-            }
-            parseOptions(options, setting)
-          case "--timeout" :: timeout :: options =>
-            val t =
-              try {
-                timeout.toInt
-              } catch {
-                case _: NumberFormatException =>
-                  throw new Exception(s"invalid timeout option: ${timeout}")
-              }
-            setting.timeout = if (t > 0) Some(t) else None
-            parseOptions(options, setting)
-          case "--debug" :: options =>
-            Debug.debugModeGlobal = true
-            parseOptions(options, setting)
-          case Nil => setting
-          case "--method" :: method :: options =>
-            setting.method = method match {
-              case "BDM" => Some(BDM)
-              case "KM"  => Some(KM)
-              case _     => throw new Exception(s"invalid method option: ${method}")
-            }
-            parseOptions(options, setting)
-          case _ => throw new Exception("invalid option")
-        }
-      }
-
-      val (args, optionStrs) = rawArgs.toList.span(!_.startsWith("--"))
-      val inputFile = args match {
-        case arg :: Nil => Some(arg)
-        case Nil        => None
-        case _          => throw new Exception("invalid arguments")
-      }
-
-      (inputFile, parseOptions(optionStrs))
+    Settings.parseArgs(args) match {
+      case Left(err) =>
+        System.err.println(s"regex-matching-analyzer: failed to parse args: ${err.msg}")
+      case Right(settings) =>
+        analyzeMatchings(settings)
     }
+  }
 
-    val (inputFile, settings) = parseArgs(args)
-
-    println(settings)
-
-    inputFile match {
-      case Some(inputFile) => fileInputTest(inputFile, settings)
-      case None            => interactiveTest(settings)
+  def analyzeMatchings(settings: Settings): Unit = {
+    val src = settings.file match {
+      case Some(path) => Source fromFile path
+      case None =>
+        println("Input regex to analyze:")
+        Source.stdin
     }
+    src
+      .getLines()
+      .map { parseRegex(_, settings) }
+      .map {
+        case Succ((r, opt)) => test(r, opt, settings)
+        case Failure(e)     => TestResult.Error(e.getMessage())
+      }
+      .foreach { result => println(s"$result\n") }
   }
 
   def parseRegex(regexStr: String, settings: Settings): Try[(RegExp[Char], PCREOptions)] =
     nonFatalCatch.withTry {
       settings.style match {
-        case Raw  => (RegExpParser(regexStr), new PCREOptions())
-        case PCRE => RegExpParser.parsePCRE(regexStr)
+        case RegExpStyle.Raw  => (RegExpParser(regexStr), new PCREOptions())
+        case RegExpStyle.PCRE => RegExpParser.parsePCRE(regexStr)
       }
     }
 
@@ -108,19 +139,6 @@ object Main {
       case (Analysis.Failure(message), _) => Skipped(message)
       case (Analysis.Timeout(_), _)       => Timeout
     }
-  }
-
-  def interactiveTest(settings: Settings): Unit = {
-    println("please input expression. (input blank line to quit)")
-    Source.stdin
-      .getLines()
-      .takeWhile { _.nonEmpty }
-      .map { parseRegex(_, settings) }
-      .map {
-        case Succ((r, opt)) => test(r, opt, settings)
-        case Failure(e)     => TestResult.Error(e.getMessage())
-      }
-      .foreach { result => println(s"$result\n") }
   }
 
   def fileInputTest(inputFile: String, settings: Settings): Unit = {
