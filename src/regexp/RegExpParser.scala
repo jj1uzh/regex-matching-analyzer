@@ -3,6 +3,8 @@ package matching.regexp
 import matching.regexp.RegExp._
 import matching.regexp.RegExpIR._
 
+import scala.util.Try
+import scala.util.control.Exception.nonFatalCatch
 import scala.util.parsing.combinator._
 
 class RegExpParser() extends RegexParsers {
@@ -220,4 +222,10 @@ object RegExpParser {
       (new RegExpParser().parseAll(body), option)
     }
   }
+
+  def parseTry(expr: String): Try[(RegExp[Char], PCREOptions)] =
+    nonFatalCatch.withTry { (apply(expr), new PCREOptions()) }
+
+  def parsePCRETry(expr: String): Try[(RegExp[Char], PCREOptions)] =
+    nonFatalCatch.withTry { parsePCRE(expr) }
 }
