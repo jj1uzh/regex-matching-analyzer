@@ -30,12 +30,14 @@ import scala.util.{Success => Succ}
   *   Input file.
   */
 case class Settings(
-    mode: RunMode = RunMode.AnalyzeMatching,
+    mode: RunMode = RunMode.ExecMatching,
     style: RegExpStyle = RegExpStyle.Raw,
     method: Option[BacktrackMethod] = Some(KM),
     timeout: Option[Int] = Some(10),
     file: Option[String] = None,
     help: Boolean = false,
+    execRegexStr: Option[String] = None,
+    execStr: Option[String] = None,
 ) {
   override def toString(): String =
     s"""--- settings ---------------------------
@@ -79,6 +81,12 @@ object Settings {
             Left(OptParseError(s"Unknown method: $methodStr"))
           )(method => Right(s.copy(method = Some(method))))
           .thenParse(rest)
+      case "--exec" :: regexStr :: str :: rest =>
+        Right(
+          s.copy(mode = RunMode.ExecMatching, execRegexStr = Some(regexStr), execStr = Some(str))
+        ) thenParse rest
+      case ("--analyze") :: rest =>
+        Right(s.copy(mode = RunMode.AnalyzeMatching)) thenParse rest
       case ("--structure") :: rest =>
         Right(s.copy(mode = RunMode.AnalyzeStructure)) thenParse rest
       case ("-d" | "--debug") :: rest =>
@@ -100,6 +108,7 @@ object Settings {
 
 sealed trait RunMode extends EnumEntry
 object RunMode {
+  case object ExecMatching extends RunMode
   case object AnalyzeMatching extends RunMode
   case object AnalyzeStructure extends RunMode
 }
@@ -111,7 +120,7 @@ object Main {
       |  -s,--style [raw|PCRE]
       |  -t,--timeout [number]
       |  -m,--method [KM|BDM]
-      |  --structure
+      |  --exec/--structure/--analyze
       |  -d,--debug
       |""".stripMargin
 
@@ -123,8 +132,28 @@ object Main {
         println(usage)
       case Right(settings) if settings.mode == RunMode.AnalyzeMatching =>
         analyzeMatchings(settings)
-      case Right(settings) =>
+      case Right(settings) if settings.mode == RunMode.AnalyzeStructure =>
         analyzeStructure(settings)
+      case Right(settings) /* if settings.mode == RunMode.ExecMatching */ =>
+        execMatching(settings)
+    }
+  }
+
+  def execMatching(settings: Settings): Unit = {
+    val regex = parseRegex(settings.execRegexStr.get, settings) match {
+      case Succ((r, _)) => GroupExp(r, 0, None)
+      case Failure(e)   => System.err.println(e); return
+    }
+    val str = settings.execStr.get
+    RegExpExec.exec(regex, str) match {
+      case None => println("No match")
+      case Some(result) =>
+        println(
+          result.toIndexedSeq
+            .sortBy(_._1)
+            .map { case (i, w) => s"$i -> $w" }
+            .mkString("{", ", ", "}")
+        )
     }
   }
 
@@ -132,6 +161,7 @@ object Main {
     val analyzerManager = StructureAnalyzersManager(
       RegExpStructureAnalysis.HasLookbehind,
       RegExpStructureAnalysis.HasLookbehindWithCapture,
+      RegExpStructureAnalysis.HasLookaheadWithCapture,
     )
     for (expr <- settings.inputSource.getLines()) {
       parseRegex(expr, settings).fold(
