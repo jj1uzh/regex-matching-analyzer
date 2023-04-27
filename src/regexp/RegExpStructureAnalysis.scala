@@ -69,6 +69,45 @@ object RegExpStructureAnalysis {
     }
   }
 
+  final object HasLookaheadWithCapture extends StructureAnalyzer[Char, RegExp[Char]] {
+    def name = "Has backreferenced captures inside lookahead?"
+    def analyze(r: RegExp[Char]): Option[RegExp[Char]] = {
+      (for (
+        lb <- listLB(r);
+        capt <- listCapt(lb);
+        if captIsBackrefed(r, capt)
+      ) yield capt).headOption
+    }
+    private def listLB(r: RegExp[Char]): LazyList[LookaheadExp[Char]] = {
+      r match {
+        case exp @ LookaheadExp(r, _) => exp #:: listLB(r)
+        case RegExpOp1(r1)            => listLB(r1)
+        case RegExpOp2(r1, r2)        => listLB(r1) ++ listLB(r2)
+        case RegExpOp3(r1, r2, r3)    => listLB(r1) ++ listLB(r2) ++ listLB(r3)
+        case _                        => LazyList.empty
+      }
+    }
+    private def listCapt(r: RegExp[Char]): LazyList[GroupExp[Char]] = {
+      r match {
+        case exp @ GroupExp(r, _, _) => exp #:: listCapt(r)
+        case RegExpOp1(r1)           => listCapt(r1)
+        case RegExpOp2(r1, r2)       => listCapt(r1) ++ listCapt(r2)
+        case RegExpOp3(r1, r2, r3)   => listCapt(r1) ++ listCapt(r2) ++ listCapt(r3)
+        case _                       => LazyList.empty
+      }
+    }
+    private def captIsBackrefed(r: RegExp[Char], exp: GroupExp[Char]): Boolean = {
+      r match {
+        case BackReferenceExp(id, _) => id == exp.id
+        case RegExpOp1(r1)           => captIsBackrefed(r1, exp)
+        case RegExpOp2(r1, r2)       => captIsBackrefed(r1, exp) || captIsBackrefed(r2, exp)
+        case RegExpOp3(r1, r2, r3) =>
+          captIsBackrefed(r1, exp) || captIsBackrefed(r2, exp) || captIsBackrefed(r3, exp)
+        case _ => false
+      }
+    }
+  }
+
   final case class MarkedRegExp[A](child: RegExp[A]) extends RegExp[A] {
     override def toString(): String = s"${UNDERLINED}${child}${RESET}"
   }
