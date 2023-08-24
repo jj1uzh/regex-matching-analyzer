@@ -134,7 +134,7 @@ class RegExpSpec extends AnyFlatSpec with Matchers {
 
   "calcTimeComplexity" should "calculate time complexity of backtrack matching" in {
     val option = new PCREOptions()
-    val method = Some(BDM)
+    val method = Some(BacktrackMethod.BDM)
     option.dotAll = true
 
     calcTimeComplexity(RegExpParser("^abc$"), option, method)._1 should be(Some(0))
