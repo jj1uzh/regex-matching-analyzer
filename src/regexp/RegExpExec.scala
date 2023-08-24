@@ -28,7 +28,7 @@ object RegExpExec {
         ),
         mon.unit(w)
       )
-    case GroupExp(r1, id, _) =>
+    case GroupExp(r1, id, _, _, _) =>
       run(r1, w) >>= { rest: String =>
         stateOp.update(_.updated(id, w.stripSuffix(rest))) >>= { _ => mon.unit(rest) }
       }

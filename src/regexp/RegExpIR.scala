@@ -29,7 +29,7 @@ object RegExpIR {
         case PlusExp(r, greedy)             => PlusExp(f(r), greedy)
         case OptionExp(r, greedy)           => OptionExp(f(r), greedy)
         case RepeatExp(r, min, max, greedy) => RepeatExp(f(r), min, max, greedy)
-        case GroupExp(r, id, name)          => GroupExp(f(r), id, name)
+        case GroupExp(r, id, name, _, _)    => GroupExp(f(r), id, name)
         case LookaheadExp(r, positive)      => LookaheadExp(f(r), positive)
         case LookbehindExp(r, positive)     => LookbehindExp(f(r), positive)
         case IfExp(cond, rt, rf)            => IfExp(f(cond), f(rt), f(rf))

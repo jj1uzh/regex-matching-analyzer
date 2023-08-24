@@ -103,7 +103,27 @@ object RepeatExp {
     }
   }
 }
-case class GroupExp[A](r: RegExp[A], id: Int, name: Option[String]) extends RegExpOp1[A](r)
+
+/** Capture Group
+  * @param r
+  *   Sub-expression.
+  * @param id
+  *   Capture ID.
+  * @param name
+  *   Capture name.
+  * @param referenced
+  *   Whether this capture is referenced by some BackReferencedExps. None if unkonwn.
+  * @param unique
+  *   Whether the ID is unique. None if unknown.
+  */
+case class GroupExp[A](
+    r: RegExp[A],
+    id: Int,
+    name: Option[String],
+    referenced: Option[Boolean] = None,
+    unique: Option[Boolean] = None
+) extends RegExpOp1[A](r)
+
 case class BackReferenceExp[A](n: Int, name: Option[String]) extends RegExpLeaf[A]
 case class StartAnchorExp[A]() extends RegExpLeaf[A]
 case class EndAnchorExp[A]() extends RegExpLeaf[A]
@@ -213,7 +233,7 @@ object RegExp {
       case CharClassExp(es, positive) => s"[${if (positive) "" else "^"}${es.mkString}]"
       case MetaCharExp(c)             => s"\\${c}"
       case BoundaryExp()              => "\\b"
-      case GroupExp(r, _, name) =>
+      case GroupExp(r, _, name, _, _) =>
         name match {
           case Some(name) => s"(?<${name}>${r})"
           case None       => s"(${r})"
@@ -255,7 +275,7 @@ object RegExp {
         case PlusExp(r, greedy)             => PlusExp(f(r), greedy)
         case OptionExp(r, greedy)           => OptionExp(f(r), greedy)
         case RepeatExp(r, min, max, greedy) => RepeatExp(f(r), min, max, greedy)
-        case GroupExp(r, id, name)          => GroupExp(f(r), id, name)
+        case GroupExp(r, id, name, _, _)    => GroupExp(f(r), id, name)
         case LookaheadExp(r, positive)      => LookaheadExp(f(r), positive)
         case LookbehindExp(r, positive)     => LookbehindExp(f(r), positive)
         case _                              => r
@@ -280,10 +300,10 @@ object RegExp {
                 s"lookbehind with unbounded matching length is unsupported."
               )
             }
-          case GroupExp(r, _, _)   => isBounded(r)
-          case LookaheadExp(r, _)  => isBounded(r)
-          case LookbehindExp(r, _) => isBounded(r)
-          case _                   => // NOP
+          case GroupExp(r, _, _, _, _) => isBounded(r)
+          case LookaheadExp(r, _)      => isBounded(r)
+          case LookbehindExp(r, _)     => isBounded(r)
+          case _                       => // NOP
         }
       }
 
@@ -293,8 +313,8 @@ object RegExp {
         case StarExp(r, _)     => checkSupported(r, inLookAhead)
         case PlusExp(r, _)     => checkSupported(r, inLookAhead)
         case OptionExp(r, _)   => checkSupported(r, inLookAhead)
-        case RepeatExp(r, _, _, _) => checkSupported(r, inLookAhead)
-        case GroupExp(r, _, _)     => checkSupported(r, inLookAhead)
+        case RepeatExp(r, _, _, _)   => checkSupported(r, inLookAhead)
+        case GroupExp(r, _, _, _, _) => checkSupported(r, inLookAhead)
         case BackReferenceExp(_, _) if inLookAhead =>
           throw RegExp.InvalidRegExpException(s"back reference in lookahead is unsupported.")
         case LookaheadExp(r, _) => checkSupported(r, true)
@@ -319,14 +339,14 @@ object RegExp {
         case AltExp(r1, r2)   => isStartAnchorHead(r1) && isStartAnchorHead(r2)
         case PlusExp(r, _)    => isStartAnchorHead(r)
         case RepeatExp(r, min, _, _) if min.isDefined => isStartAnchorHead(r)
-        case GroupExp(r, _, _)                        => isStartAnchorHead(r)
+        case GroupExp(r, _, _, _, _)                  => isStartAnchorHead(r)
         case _                                        => false
       }
     }
 
     def getGroupMap(r: RegExp[A]): Map[Int, RegExp[A]] = {
       r match {
-        case GroupExp(r, n, _)                      => Map(n -> r) ++ getGroupMap(r)
+        case GroupExp(r, n, _, _, _)                => Map(n -> r) ++ getGroupMap(r)
         case ConcatExp(r1, r2)                      => getGroupMap(r1) ++ getGroupMap(r2)
         case AltExp(r1, r2)                         => getGroupMap(r1) ++ getGroupMap(r2)
         case StarExp(r, _)                          => getGroupMap(r)
@@ -341,7 +361,7 @@ object RegExp {
 
     def collectGroupsInPositiveLookAround(r: RegExp[A]): Set[Int] = {
       r match {
-        case GroupExp(r, _, _) => collectGroupsInPositiveLookAround(r)
+        case GroupExp(r, _, _, _, _) => collectGroupsInPositiveLookAround(r)
         case ConcatExp(r1, r2) =>
           collectGroupsInPositiveLookAround(r1) ++ collectGroupsInPositiveLookAround(r2)
         case AltExp(r1, r2) =>
@@ -358,15 +378,15 @@ object RegExp {
 
     def collectBackReferences(r: RegExp[A]): Set[Int] = {
       r match {
-        case ConcatExp(r1, r2)      => collectBackReferences(r1) | collectBackReferences(r2)
-        case AltExp(r1, r2)         => collectBackReferences(r1) | collectBackReferences(r2)
-        case StarExp(r, _)          => collectBackReferences(r)
-        case PlusExp(r, _)          => collectBackReferences(r)
-        case OptionExp(r, _)        => collectBackReferences(r)
-        case RepeatExp(r, _, _, _)  => collectBackReferences(r)
-        case GroupExp(r, _, _)      => collectBackReferences(r)
-        case BackReferenceExp(n, _) => Set(n)
-        case _                      => Set()
+        case ConcatExp(r1, r2)       => collectBackReferences(r1) | collectBackReferences(r2)
+        case AltExp(r1, r2)          => collectBackReferences(r1) | collectBackReferences(r2)
+        case StarExp(r, _)           => collectBackReferences(r)
+        case PlusExp(r, _)           => collectBackReferences(r)
+        case OptionExp(r, _)         => collectBackReferences(r)
+        case RepeatExp(r, _, _, _)   => collectBackReferences(r)
+        case GroupExp(r, _, _, _, _) => collectBackReferences(r)
+        case BackReferenceExp(n, _)  => Set(n)
+        case _                       => Set()
       }
     }
 
@@ -382,7 +402,7 @@ object RegExp {
         }
 
         r match {
-          case GroupExp(r, _, _) => replace(r)
+          case GroupExp(r, _, _, _, _) => replace(r)
           case LookbehindExp(_, _) | BoundaryExp() =>
             approximated = true
             FailEpsExp()

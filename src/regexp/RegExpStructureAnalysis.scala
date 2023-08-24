@@ -30,6 +30,45 @@ object RegExpStructureAnalysis {
       }
   }
 
+  private def infiniteLang[A](r: RegExp[A]): Boolean = r match {
+    case StarExp(_, _)            => true
+    case PlusExp(_, _)            => true
+    case RepeatExp(_, _, None, _) => true
+    case RegExpOp1(r1)            => infiniteLang(r1)
+    case RegExpOp2(r1, r2)        => infiniteLang(r1) || infiniteLang(r2)
+    case RegExpOp3(r1, r2, r3)    => infiniteLang(r1) || infiniteLang(r2) || infiniteLang(r3)
+    case _                        => false
+  }
+
+  private def listCapt(r: RegExp[Char]): LazyList[GroupExp[Char]] = {
+    r match {
+      case exp @ GroupExp(r, _, _, _, _) => exp #:: listCapt(r)
+      case RegExpOp1(r1)                 => listCapt(r1)
+      case RegExpOp2(r1, r2)             => listCapt(r1) ++ listCapt(r2)
+      case RegExpOp3(r1, r2, r3)         => listCapt(r1) ++ listCapt(r2) ++ listCapt(r3)
+      case _                             => LazyList.empty
+    }
+  }
+
+  private def captIsBackrefed(r: RegExp[Char], exp: GroupExp[Char]): Boolean = {
+    r match {
+      case BackReferenceExp(id, _) => id == exp.id
+      case RegExpOp1(r1)           => captIsBackrefed(r1, exp)
+      case RegExpOp2(r1, r2)       => captIsBackrefed(r1, exp) || captIsBackrefed(r2, exp)
+      case RegExpOp3(r1, r2, r3) =>
+        captIsBackrefed(r1, exp) || captIsBackrefed(r2, exp) || captIsBackrefed(r3, exp)
+      case _ => false
+    }
+  }
+
+  final object BackreferencedCaptureHasInfiniteSubexp
+      extends StructureAnalyzer[Char, RegExp[Char]] {
+    def name = "Has backreferenced captures with (maybe) infinite languages?"
+    def analyze(r: RegExp[Char]): Option[RegExp[Char]] = {
+      listCapt(r).filter(captIsBackrefed(r, _)).filter(infiniteLang).headOption
+    }
+  }
+
   final object HasLookbehindWithCapture extends StructureAnalyzer[Char, RegExp[Char]] {
     def name = "Has backreferenced captures inside lookbehinds?"
     def analyze(r: RegExp[Char]): Option[RegExp[Char]] = {
@@ -46,25 +85,6 @@ object RegExpStructureAnalysis {
         case RegExpOp2(r1, r2)         => listLB(r1) ++ listLB(r2)
         case RegExpOp3(r1, r2, r3)     => listLB(r1) ++ listLB(r2) ++ listLB(r3)
         case _                         => LazyList.empty
-      }
-    }
-    private def listCapt(r: RegExp[Char]): LazyList[GroupExp[Char]] = {
-      r match {
-        case exp @ GroupExp(r, _, _) => exp #:: listCapt(r)
-        case RegExpOp1(r1)           => listCapt(r1)
-        case RegExpOp2(r1, r2)       => listCapt(r1) ++ listCapt(r2)
-        case RegExpOp3(r1, r2, r3)   => listCapt(r1) ++ listCapt(r2) ++ listCapt(r3)
-        case _                       => LazyList.empty
-      }
-    }
-    private def captIsBackrefed(r: RegExp[Char], exp: GroupExp[Char]): Boolean = {
-      r match {
-        case BackReferenceExp(id, _) => id == exp.id
-        case RegExpOp1(r1)           => captIsBackrefed(r1, exp)
-        case RegExpOp2(r1, r2)       => captIsBackrefed(r1, exp) || captIsBackrefed(r2, exp)
-        case RegExpOp3(r1, r2, r3) =>
-          captIsBackrefed(r1, exp) || captIsBackrefed(r2, exp) || captIsBackrefed(r3, exp)
-        case _ => false
       }
     }
   }
@@ -89,11 +109,11 @@ object RegExpStructureAnalysis {
     }
     private def listCapt(r: RegExp[Char]): LazyList[GroupExp[Char]] = {
       r match {
-        case exp @ GroupExp(r, _, _) => exp #:: listCapt(r)
-        case RegExpOp1(r1)           => listCapt(r1)
-        case RegExpOp2(r1, r2)       => listCapt(r1) ++ listCapt(r2)
-        case RegExpOp3(r1, r2, r3)   => listCapt(r1) ++ listCapt(r2) ++ listCapt(r3)
-        case _                       => LazyList.empty
+        case exp @ GroupExp(r, _, _, _, _) => exp #:: listCapt(r)
+        case RegExpOp1(r1)                 => listCapt(r1)
+        case RegExpOp2(r1, r2)             => listCapt(r1) ++ listCapt(r2)
+        case RegExpOp3(r1, r2, r3)         => listCapt(r1) ++ listCapt(r2) ++ listCapt(r3)
+        case _                             => LazyList.empty
       }
     }
     private def captIsBackrefed(r: RegExp[Char], exp: GroupExp[Char]): Boolean = {
@@ -111,8 +131,11 @@ object RegExpStructureAnalysis {
   final case class MarkedRegExp[A](child: RegExp[A]) extends RegExp[A] {
     override def toString(): String = s"${UNDERLINED}${child}${RESET}"
   }
-  private def marked[A](r: RegExp[A], sub: RegExp[A]): RegExp[A] = {
+  def marked[A](r: RegExp[A], sub: RegExp[A]): RegExp[A] = {
     if (r == sub) MarkedRegExp(r) else recursiveApply(r, marked(_, sub))
+  }
+  def markedAll[A](r: RegExp[A], subs: Seq[RegExp[A]]): RegExp[A] = {
+    subs.foldLeft(r)(marked(_, _))
   }
 
   final class StructureAnalyzersManager(
@@ -161,7 +184,7 @@ object RegExpStructureAnalysis {
       case PlusExp(r, greedy)             => PlusExp(f(r), greedy)
       case OptionExp(r, greedy)           => OptionExp(f(r), greedy)
       case RepeatExp(r, min, max, greedy) => RepeatExp(f(r), min, max, greedy)
-      case GroupExp(r, id, name)          => GroupExp(f(r), id, name)
+      case GroupExp(r, id, name, _, _)    => GroupExp(f(r), id, name)
       case LookaheadExp(r, positive)      => LookaheadExp(f(r), positive)
       case LookbehindExp(r, positive)     => LookbehindExp(f(r), positive)
       case _                              => r

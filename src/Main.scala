@@ -3,6 +3,7 @@ package matching
 import enumeratum.EnumEntry
 import matching.TestResult._
 import matching.regexp.RegExp._
+import matching.regexp.RegExpSelector.RegExpQuerySelectorOps
 import matching.regexp.RegExpStructureAnalysis.StructureAnalyzersManager
 import matching.regexp.RegExpStyle
 import matching.regexp._
@@ -36,8 +37,8 @@ case class Settings(
     timeout: Option[Int] = Some(10),
     file: Option[String] = None,
     help: Boolean = false,
-    execRegexStr: Option[String] = None,
-    execStr: Option[String] = None,
+    argStr1: Option[String] = None,
+    argStr2: Option[String] = None,
 ) {
   override def toString(): String =
     s"""--- settings ---------------------------
@@ -83,12 +84,14 @@ object Settings {
           .thenParse(rest)
       case "--exec" :: regexStr :: str :: rest =>
         Right(
-          s.copy(mode = RunMode.ExecMatching, execRegexStr = Some(regexStr), execStr = Some(str))
+          s.copy(mode = RunMode.ExecMatching, argStr1 = Some(regexStr), argStr2 = Some(str))
         ) thenParse rest
       case ("--analyze") :: rest =>
         Right(s.copy(mode = RunMode.AnalyzeMatching)) thenParse rest
       case ("--structure") :: rest =>
         Right(s.copy(mode = RunMode.AnalyzeStructure)) thenParse rest
+      case ("--query") :: query :: rest =>
+        Right(s.copy(mode = RunMode.QuerySelector, argStr1 = Some(query))) thenParse rest
       case ("-d" | "--debug") :: rest =>
         Debug.debugModeGlobal = true
         parseArgsRec(rest, s)
@@ -111,12 +114,13 @@ object RunMode {
   case object ExecMatching extends RunMode
   case object AnalyzeMatching extends RunMode
   case object AnalyzeStructure extends RunMode
+  case object QuerySelector extends RunMode
 }
 
 object Main {
 
   private def usage: String =
-    """regex-matching-analyzer <options> <input file>
+    """regex-matching-analyzer <options> <arg1> <arg2>
       |  -s,--style [raw|PCRE]
       |  -t,--timeout [number]
       |  -m,--method [KM|BDM]
@@ -134,17 +138,23 @@ object Main {
         analyzeMatchings(settings)
       case Right(settings) if settings.mode == RunMode.AnalyzeStructure =>
         analyzeStructure(settings)
+      case Right(settings) if settings.mode == RunMode.QuerySelector =>
+        querySelector(settings)
       case Right(settings) /* if settings.mode == RunMode.ExecMatching */ =>
         execMatching(settings)
     }
   }
 
   def execMatching(settings: Settings): Unit = {
-    val regex = parseRegex(settings.execRegexStr.get, settings) match {
+    if (settings.argStr1.isEmpty || settings.argStr2.isEmpty) {
+      System.err.println(usage)
+      System.exit(1)
+    }
+    val regex = parseRegex(settings.argStr1.get, settings) match {
       case Succ((r, _)) => GroupExp(r, 0, None)
       case Failure(e)   => System.err.println(e); return
     }
-    val str = settings.execStr.get
+    val str = settings.argStr2.get
     RegExpExec.exec(regex, str) match {
       case None => println("No match")
       case Some(result) =>
@@ -157,11 +167,32 @@ object Main {
     }
   }
 
+  def querySelector(settings: Settings): Unit = {
+    val query = settings.argStr1.get
+    val regexStrs =
+      settings.argStr2 match {
+        case Some(arg) => Iterator(arg)
+        case None      => Source.stdin.getLines()
+      }
+    regexStrs.foreach { str =>
+      parseRegex(str, settings) match {
+        case Failure(e) => System.err.println(e.getMessage()); System.exit(1)
+        case Succ((r, _)) =>
+          val reg = GroupExp(r, 0, None)
+          val selected = reg.querySelectorAll(query)
+          if (selected.nonEmpty) {
+            println(RegExpStructureAnalysis.markedAll(reg, selected))
+          }
+      }
+    }
+  }
+
   def analyzeStructure(settings: Settings): Unit = {
     val analyzerManager = StructureAnalyzersManager(
-      RegExpStructureAnalysis.HasLookbehind,
-      RegExpStructureAnalysis.HasLookbehindWithCapture,
-      RegExpStructureAnalysis.HasLookaheadWithCapture,
+//      RegExpStructureAnalysis.HasLookbehind,
+//      RegExpStructureAnalysis.HasLookbehindWithCapture,
+//      RegExpStructureAnalysis.HasLookaheadWithCapture,
+      RegExpStructureAnalysis.BackreferencedCaptureHasInfiniteSubexp,
     )
     for (expr <- settings.inputSource.getLines()) {
       parseRegex(expr, settings).fold(
