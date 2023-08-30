@@ -15,7 +15,6 @@ scalacOptions ++= Seq("-language:higherKinds")
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
 ThisBuild / scalafixOnCompile := true
-ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.2.0"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % "test"

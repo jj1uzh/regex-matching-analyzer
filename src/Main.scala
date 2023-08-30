@@ -90,6 +90,8 @@ object Settings {
         Right(s.copy(mode = RunMode.AnalyzeMatching)) thenParse rest
       case ("--structure") :: rest =>
         Right(s.copy(mode = RunMode.AnalyzeStructure)) thenParse rest
+      case ("--copylevel") :: regex :: rest =>
+        Right(s.copy(mode = RunMode.BackrefCopyLevel, argStr1 = Some(regex))) thenParse rest
       case ("--query") :: query :: rest =>
         Right(s.copy(mode = RunMode.QuerySelector, argStr1 = Some(query))) thenParse rest
       case ("-d" | "--debug") :: rest =>
@@ -115,6 +117,7 @@ object RunMode {
   case object AnalyzeMatching extends RunMode
   case object AnalyzeStructure extends RunMode
   case object QuerySelector extends RunMode
+  case object BackrefCopyLevel extends RunMode
 }
 
 object Main {
@@ -140,8 +143,26 @@ object Main {
         analyzeStructure(settings)
       case Right(settings) if settings.mode == RunMode.QuerySelector =>
         querySelector(settings)
+      case Right(settings) if settings.mode == RunMode.BackrefCopyLevel =>
+        analyzeCopyLevel(settings)
       case Right(settings) /* if settings.mode == RunMode.ExecMatching */ =>
         execMatching(settings)
+    }
+  }
+
+  def analyzeCopyLevel(settings: Settings): Unit = {
+    settings.argStr1.fold(exitWithError(usage)) { regexStr =>
+      val regex = parseRegex(regexStr, settings).fold(
+        e => exitWithError(e.getMessage),
+        { case (r, _) => r }
+      )
+      CopyLevelAnalyzer.exec(regex)
+    // match {
+    //   case CopyLevelAnalyzer.Copyless          => println("copyless")
+    //   case CopyLevelAnalyzer.BoundedCopy       => println("bounded")
+    //   case CopyLevelAnalyzer.PolynomialCopy(r) => println(s"polynomial $r")
+    //   case CopyLevelAnalyzer.Exponential       => println("exponential")
+    // }
     }
   }
 
@@ -231,6 +252,11 @@ object Main {
       case (Analysis.Failure(message), _) => Skipped(message)
       case (Analysis.Timeout(_), _)       => Timeout
     }
+  }
+
+  def exitWithError(msg: String, code: Int = 1): Nothing = {
+    System.err.println(msg)
+    scala.sys.exit(code)
   }
 
   // def fileInputTest(inputFile: String, settings: Settings): Unit = {

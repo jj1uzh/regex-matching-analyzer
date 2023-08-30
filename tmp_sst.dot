@@ -1,0 +1,34 @@
+digraph tmp_sst {
+  graph [
+    rankdir = LR
+  ];
+
+  node [
+    shape = circle
+  ];
+
+  "initial" [
+    label = "",
+    shape = none,
+    fixedsize = true,
+    width = 0,
+    height = 0
+  ];
+  "0" [label = "{}, (\\1)*", shape = doublecircle];
+  "1" [label = "{}, (₁(a)*)₁b(\\1)*"];
+  "2" [label = "{}, b(\\1)*"];
+  "3" [label = "{1}, (a)*)₁b(\\1)*"];
+
+  "initial" -> "1";
+  "3" -> "2" [label = ")₁
+xₒ := xₒ\ny₁ := y₁\nz₁ := y₁"];
+  "0" -> "0" [label = "\\1
+xₒ := xₒz₁\ny₁ := y₁\nz₁ := z₁"];
+  "2" -> "0" [label = "b
+xₒ := xₒb\ny₁ := y₁\nz₁ := z₁"];
+  "1" -> "3" [label = "(₁
+xₒ := xₒ\ny₁ := \nz₁ := z₁"];
+  "3" -> "3" [label = "a
+xₒ := xₒa\ny₁ := y₁a\nz₁ := z₁"];
+
+}

@@ -54,8 +54,10 @@ case class ElemExp[A](a: A) extends RegExpLeaf[A]
 case class EmptyExp[A]() extends RegExpLeaf[A]
 case class EpsExp[A]() extends RegExpLeaf[A]
 case class ConcatExp[A](r1: RegExp[A], r2: RegExp[A]) extends RegExpOp2[A](r1, r2)
+
 case class AltExp[A](r1: RegExp[A], r2: RegExp[A]) extends RegExpOp2[A](r1, r2)
 case class StarExp[A](r: RegExp[A], greedy: Boolean) extends RegExpOp1[A](r)
+
 case class PlusExp[A](r: RegExp[A], greedy: Boolean) extends RegExpOp1[A](r)
 case class OptionExp[A](r: RegExp[A], greedy: Boolean) extends RegExpOp1[A](r)
 case class RepeatExp[A](r: RegExp[A], var min: Option[Int], var max: Option[Int], greedy: Boolean)

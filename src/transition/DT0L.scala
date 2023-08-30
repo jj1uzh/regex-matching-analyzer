@@ -10,6 +10,17 @@ class DT0L[A, Q](
 ) {
   type Pump = (Q, Seq[A], Q)
 
+  override def toString(): String = {
+    s"""DT0L(
+       |  states = Set(
+       |    ${states.mkString(",\n    ")}
+       |  )
+       |  morphs = Map(
+       |    ${morphs.mkString(",\n    ")}
+       |  )
+       |)""".stripMargin
+  }
+
   def rename(): (DT0L[A, Int], Map[Q, Int]) = {
     val renameMap = states.zipWithIndex.toMap
     val renamedStates = states.map(renameMap)
