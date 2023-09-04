@@ -11,12 +11,18 @@ class DT0L[A, Q](
   type Pump = (Q, Seq[A], Q)
 
   override def toString(): String = {
+    val ss = states.toSeq
+    val renameStates = ss.zip(Iterator.from('A')).map { case (q, n) => q -> n.toChar }.toMap
+    val renamedStatesDef = ss.map(s => s"${renameStates(s)} = $s")
+    val renamedMorphs = morphs.view.mapValues(_.map { case (q, qs) =>
+      s"${renameStates(q)} => ${qs.map(renameStates).mkString}"
+    })
     s"""DT0L(
        |  states = Set(
-       |    ${states.mkString(",\n    ")}
+       |    ${renamedStatesDef.mkString(",\n    ")}
        |  )
        |  morphs = Map(
-       |    ${morphs.mkString(",\n    ")}
+       |    ${renamedMorphs.mkString(",\n    ")}
        |  )
        |)""".stripMargin
   }

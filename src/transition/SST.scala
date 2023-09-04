@@ -1,7 +1,9 @@
 package matching.transition
 
+import matching.Witness
 import matching.regexp.KleeneRegex.ExtendedChar
 import matching.regexp.KleeneRegex.ExtendedChar._
+import matching.tool.Debug
 import matching.tool.PrettyPrint
 import matching.tool.Visualizer
 import matching.transition.SST._
@@ -56,6 +58,7 @@ case class SST[State, InputAlph, OutputAlph](
       .iterate((basecase, basecase)) { case (all, prevAdded) =>
         val added = prevAdded
           .groupMap(_._1)(_._2)
+          .toSeq
           .flatMap { case (toState, assignees) =>
             // if (q', x') in INF, (q, x) s.t. q -> q' with [x' := ...x...] is in INF.
             transMap_ToState(toState).flatMap { case (fromState, _, update) =>
@@ -70,9 +73,8 @@ case class SST[State, InputAlph, OutputAlph](
       ._1
   }
 
-  def growthRate: Option[Int] = {
-    val infSet = this.infSet
-    if (infSet.isEmpty) return None
+  def growthRate: (Option[Int], Witness[InputAlph], Option[(State, Var)]) = {
+    val infSet = this.infSet // ++ (for (s <- states; v <- vars) yield (s, v))
     val dt0l = {
       val morphs = transMap_domain.map { case (in, trans) =>
         in -> {
@@ -93,9 +95,8 @@ case class SST[State, InputAlph, OutputAlph](
       }
       new DT0L(infSet, morphs)
     }
-    System.err.println(dt0l)
-    dt0l.calcGrowthRate(infSet)._1
-//    dt0l.calcGrowthRate(infSet.filter { case (q, _) => q == initState })._1
+    Debug.debug(dt0l)
+    dt0l.calcGrowthRate(accepts.map(_ -> varOut))
   }
 
   def trim: SST[State, InputAlph, OutputAlph] = {
@@ -106,7 +107,6 @@ case class SST[State, InputAlph, OutputAlph](
       .find { case Seq(s1, s2) => s1 == s2 }
       .get
       .head
-    println(reachables)
     this.copy(
       accepts = this.accepts & reachables,
       trans = this.trans.filter { case (s1, _, _, s2) =>
@@ -226,9 +226,8 @@ object SST {
           state,
           Reference(id),
           Update[Char](
-            ((xout -> Seq(xout, xrefs(id))) +: state.toSeq.map(captID =>
-              xaccs(captID) -> Seq(xaccs(captID), xaccs(id))
-            )).toMap,
+            ((xout -> Seq(xout, xrefs(id))) +:
+              state.toSeq.map(captID => xaccs(captID) -> Seq(xaccs(captID), xrefs(id)))).toMap,
             vars
           ),
           state,

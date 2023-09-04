@@ -2,8 +2,9 @@ package matching
 
 import matching.tool.IO
 
-case class Witness[A](var separators: Seq[Seq[A]],pumps: Seq[Seq[A]]) {
-  override def toString(): String = {
+case class Witness[A](var separators: Seq[Seq[A]], pumps: Seq[Seq[A]]) {
+  override def toString(): String = if (isEmpty) ""
+  else {
     val escapedSeparators = separators.map(_.map(IO.escape).mkString)
     val escapedPumps =
       pumps.map(_.map(IO.escape).mkString("", "", ""))
@@ -20,5 +21,5 @@ case class Witness[A](var separators: Seq[Seq[A]],pumps: Seq[Seq[A]]) {
 }
 
 object Witness {
-  def empty[A]: Witness[A] = Witness(Seq(),Seq())
+  def empty[A]: Witness[A] = Witness(Seq(), Seq())
 }

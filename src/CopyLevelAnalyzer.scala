@@ -20,11 +20,9 @@ object CopyLevelAnalyzer {
     val (kregex, idSet) = KleeneRegex.fromRegExp(r)
     Debug.debug(kregex)
     val dfa = DFA.fromKleeneRegexByDerivative(kregex)
-    Debug.debug(dfa)
     new Visualizer.NFAVisualizer(dfa).visualize("tmp_dfa")
     val sst = SST.referenceDSST(idSet, dfa.sigma.collect { case WrappedChar(c) => c }).prod(dfa)
     Visualizer.SSTVisualizer(sst).visualize("tmp_sst")
-    Debug.debug(sst)
     println(sst.growthRate)
   }
 }

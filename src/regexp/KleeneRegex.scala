@@ -26,6 +26,9 @@ sealed trait KleeneRegex[+A] {
     case Union(r1, r2)     => r1.nullable || r2.nullable
   }
 
+  private def toNull[B >: A]: KleeneRegex[B] =
+    if (nullable) Epsilon else Empty
+
   protected def simple[B >: A]: KleeneRegex[B] = this match {
     case r @ (Empty | Epsilon | Atom(_)) => r
     case Concat(Epsilon, r)              => r
@@ -39,14 +42,13 @@ sealed trait KleeneRegex[+A] {
     case other                           => other
   }
 
-  def deriv[B >: A](a: B): Set[KleeneRegex[B]] = this match {
-    case Empty | Epsilon => Set()
-    case Atom(b)         => if (a == b) Set(Epsilon) else Set()
-    case Concat(r1, r2) if r1.nullable =>
-      (r2.deriv(a) ++ r1.deriv(a).map(Concat(_, r2))).map(_.simple)
-    case Concat(r1, r2) => r1.deriv(a).map(Concat(_, r2)).map(_.simple)
-    case Union(r1, r2)  => (r1.deriv(a) ++ r2.deriv(a)).map(_.simple)
-    case s @ Star(r1)   => r1.deriv(a).map(Concat(_, s)).map(_.simple)
+  def deriv[B >: A](a: B): KleeneRegex[B] = this match {
+    case Empty | Epsilon => Empty
+    case Atom(b)         => if (a == b) Epsilon else Empty
+    case Concat(r1, r2) =>
+      Union.simple(Concat.simple(r1.deriv(a), r2), Concat.simple(r1.toNull, r2.deriv(a)))
+    case Union(r1, r2) => Union.simple(r1.deriv(a), r2.deriv(a))
+    case s @ Star(r1)  => Concat.simple(r1.deriv(a), s)
   }
 
   def alphabets[B >: A]: Set[B] = this match {
@@ -66,6 +68,44 @@ object KleeneRegex {
   case class Concat[A](r1: KleeneRegex[A], r2: KleeneRegex[A]) extends KleeneRegex[A]
   case class Union[A](r1: KleeneRegex[A], r2: KleeneRegex[A]) extends KleeneRegex[A]
   case class Star[A](r: KleeneRegex[A]) extends KleeneRegex[A]
+
+  object Concat {
+    def simple[A](r1: KleeneRegex[A], r2: => KleeneRegex[A]): KleeneRegex[A] =
+      r1 match {
+        case Empty              => Empty
+        case Epsilon            => r2
+        case Concat(r1_1, r1_2) => Concat(r1_1, Concat(r1_2, r2))
+        case r1 =>
+          r2 match {
+            case Empty   => Empty
+            case Epsilon => r1
+            case r2      => Concat(r1, r2)
+          }
+      }
+  }
+
+  object Union {
+    def simple[A](r1: KleeneRegex[A], r2: => KleeneRegex[A]): KleeneRegex[A] =
+      r1 match {
+        case Empty             => r2
+        case Union(r1_1, r1_2) => Union(r1_1, Union(r1_2, r2))
+        case r1 =>
+          r2 match {
+            case Empty          => r1
+            case r2 if r1 == r2 => r1
+            case r2             => Union(r1, r2)
+          }
+      }
+  }
+
+  object Star {
+    def simple[A](r: KleeneRegex[A]): KleeneRegex[A] =
+      r match {
+        case Epsilon | Empty => Epsilon
+        case s @ Star(_)     => s
+        case r               => Star(r)
+      }
+  }
 
   sealed trait ExtendedChar extends Product with Serializable {
     override def toString(): String = this match {
